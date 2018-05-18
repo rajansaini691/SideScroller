@@ -1,0 +1,85 @@
+package client;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+
+public class IntroScreen {
+
+	//Contains two text fields detailing the port and host
+	private InputText inputPort, inputHost;
+	
+	//Holds networking variables
+	private String host;
+	private int port;
+	
+	//Stores the Comp object so that it can change its game state
+	private Comp comp;
+	
+	public IntroScreen(Comp comp) {
+		inputPort = new InputText(130, 500, 200, 50);
+		inputPort.select();
+		inputHost = new InputText(510, 500, 200, 50);
+		
+		this.comp = comp;
+		
+	}
+	
+	public void draw(Graphics2D win) {
+		//Draws background
+		win.setColor(Color.BLACK);
+		win.fillRect(0, 0, 800, 600);
+		
+		//Initializes drawing text
+		win.setFont(new Font("Yu Gothic", Font.PLAIN, 20));
+		win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		win.setColor(Color.WHITE);
+		
+		//Draws text fields and labels
+		win.drawString("Port: ", 50, 533);
+		inputPort.draw(win);
+		
+		win.drawString("Host: ", 420, 533);
+		inputHost.draw(win);
+		
+		//Switches to modifying IP address
+		if(inputPort.isFinished()) {
+			inputPort.deselect();
+			inputHost.select();
+		}
+		
+		//Enters waiting state and sets port and host
+		if(inputHost.isFinished()) {
+			inputHost.deselect();
+			try {
+				port = Integer.parseInt(inputPort.getMessage());
+			} catch(NumberFormatException e) {
+				port = 0;
+			}
+			host = inputHost.getMessage();
+			
+			comp.setGameState(1);
+			
+		}
+
+	}
+	
+	
+	public InputText getPortField() {
+		return inputPort;
+	}
+	
+	public InputText getHostField() {
+		return inputHost;
+	}
+	
+	public String getHost() {
+		return host;
+	}
+	
+	public int getPort() {
+		return port;
+	}
+	
+}
