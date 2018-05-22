@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -59,7 +60,8 @@ public class BlockPlacer implements KeyListener {
 	 */
 	public void draw(Graphics2D win) {
 		win.setColor(Color.WHITE);
-		win.drawString("" + counter, 350, 400);
+		win.setFont(new Font("Yu gothic", Font.BOLD, 200));
+		win.drawString("" + counter, 330, 500);
 	}
 	
 	/**

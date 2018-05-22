@@ -42,11 +42,11 @@ public class Client {
 		} catch (SocketException e) {
 			System.out.println("Failed to bind to given port. Using address " + comp.getHost() + " and port " + comp.getPort());
 			e.printStackTrace();
-			System.exit(0);
+			//System.exit(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Failed to bind to given port. Using address " + comp.getHost() + " and port " + comp.getPort());
-			System.exit(0);
+			//System.exit(0);
 		}
 		
 		//Once connected to server, create input and output streams and pass it to comp so it can respond

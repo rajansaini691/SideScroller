@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.Random;
 
 import server.InputMessage;
 import server.OutputMessage;
@@ -148,6 +149,12 @@ public class Player {
 		case InputMessage.DIE:
 			die();
 			break;
+		
+		case InputMessage.SABOTAGE:
+			System.out.println("Player " + ID + " has been sabotaged");
+			// Determine sabotage, warn client, wait, activate sabotage, notify client
+			
+			break;
 			
 		default:
 			System.out.println("Received unknown command: " + command);
@@ -184,6 +191,12 @@ public class Player {
 	 */
 	public void allowSabotage() {
 		sendMessage(new OutputMessage(ID, OutputMessage.CAN_SABOTAGE));
+	}
+	
+	public void activateSabotage() {
+		Random random = new Random();
+		//TODO Complete method
+		
 	}
 	
 	/**

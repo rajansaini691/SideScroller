@@ -46,14 +46,23 @@ public class Comp extends GameDriverV3 implements KeyListener {
 	private static final int PLAYING_STATE_IMMOBILIZED = 1;
 	private static final int PLAYING_STATE_DEAD = 2;
 	private static final int PLAYING_STATE_CAN_SABOTAGE = 3;
-
+	private static final int AWAITING_SABOTAGE_REVERSE = 4;
+	private static final int RECEIVED_SABOTAGE_REVERSE = 5;
+	private static final int AWAITING_SABOTAGE_OBSCURE = 6;
+	private static final int RECEIVED_SABOTAGE_OBSCURE = 7;
+	private static final int AWAITING_SABOTAGE_DELAY = 8;
+	private static final int RECEIVED_SABOTAGE_DELAY = 9;
+	
 	public Comp() {
-		intro = new IntroScreen(this);
+		intro = new IntroScreen(this); 
 		nameScreen = new NameScreen(this);
 
 		this.addKeyListener(this);
 		this.addKeyListener(intro.getHostField());
 		this.addKeyListener(intro.getPortField());
+		
+		setGameState(STATE_PLAYING);
+		playingState = Comp.RECEIVED_SABOTAGE_REVERSE;
 	}
 
 	/**
@@ -88,11 +97,11 @@ public class Comp extends GameDriverV3 implements KeyListener {
 				win.drawString("PLAYING", 150, 200);
 
 			} else if (playingState == Comp.PLAYING_STATE_IMMOBILIZED) {
-				win.setColor(Color.GREEN);
+				win.setColor(new Color(68, 140, 63));
 				win.fillRect(0, 0, 800, 600);
 
 				win.setColor(Color.WHITE);
-				win.drawString("IMMOBILIZED", 75, 200);
+				win.drawString("IMMOBILIZED", 40, 200);
 
 			} else if (playingState == Comp.PLAYING_STATE_DEAD) {
 				win.setColor(Color.BLACK);
@@ -111,9 +120,79 @@ public class Comp extends GameDriverV3 implements KeyListener {
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 100));
 				win.drawString("Press the number of the player you want to sabotage", 20, 200);
 
+			} else if (playingState == Comp.AWAITING_SABOTAGE_DELAY) {
+				win.setColor(new Color(60, 0, 0));
+				win.fillRect(0, 0, 800, 600);
+				
+				win.setColor(Color.WHITE);
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
+				win.drawString("You have been sabotaged!", 20, 200);
+				
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
+				win.drawString("Your jumps are about to get delayed by 100 ms", 45, 300);
+			
+			} else if(playingState == Comp.AWAITING_SABOTAGE_OBSCURE) {
+				win.setColor(new Color(0, 60, 0));
+				win.fillRect(0, 0, 800, 600);
+				
+				win.setColor(Color.WHITE);
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
+				win.drawString("You have been sabotaged!", 20, 200);
+				
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
+				win.drawString("Your screen is about to get obscured", 100, 300);
+				
+			} else if(playingState == Comp.AWAITING_SABOTAGE_REVERSE) {
+				win.setColor(new Color(0, 0, 60));
+				win.fillRect(0, 0, 800, 600);
+				
+				win.setColor(Color.WHITE);
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
+				win.drawString("You have been sabotaged!", 20, 200);
+				
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
+				win.drawString("Your controls are about to get inverted", 100, 250);
+				win.drawString("(down = jump)", 275, 300);
+				
+			} else if(playingState == Comp.RECEIVED_SABOTAGE_DELAY) {
+				win.setColor(new Color(150, 0, 0));
+				win.fillRect(0, 0, 800, 600);
+				
+				win.setColor(Color.WHITE);
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
+				win.drawString("You have been sabotaged!", 20, 200);
+				
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
+				win.drawString("Your jumps are now delayed by 100 ms", 90, 300);
+				
+			} else if(playingState == Comp.RECEIVED_SABOTAGE_OBSCURE) {
+				win.setColor(new Color(0, 150, 0));
+				win.fillRect(0, 0, 800, 600);
+				
+				win.setColor(Color.WHITE);
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
+				win.drawString("You have been sabotaged!", 20, 200);
+				
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
+				win.drawString("Your screen is now obscured", 165, 300);
+				
+			} else if(playingState == Comp.RECEIVED_SABOTAGE_REVERSE) {
+				win.setColor(new Color(61, 64, 158));
+				win.fillRect(0, 0, 800, 600);
+				
+				win.setColor(Color.WHITE);
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
+				win.drawString("You have been sabotaged!", 20, 200);
+				
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
+				win.drawString("Your controls are now inverted!", 155, 250);
+				win.drawString("(down = jump)", 277, 300);
+			} 
+			
+			// Only draw the placing counter while the client is alive
+			if(playingState != Comp.PLAYING_STATE_DEAD) {
+				placer.draw(win);
 			}
-
-			placer.draw(win);
 
 		}
 	}
@@ -191,14 +270,19 @@ public class Comp extends GameDriverV3 implements KeyListener {
 			}
 
 			if (playingState == Comp.PLAYING_STATE_CAN_SABOTAGE) {
-				// ID of player to be sabotaged, determined by number pressed
-				byte sabotageID = Byte.parseByte(e.getKeyText(keyCode));
-
-				// As long as the player does not sabotage himself or an invalid player, sabotage the desired player
-				if (sabotageID != this.ID && sabotageID < 10 && sabotageID > 0) {
+				
+				/* If the player presses something other than a number, a NumberFormatException
+				 * will be thrown. When that happens, do nothing. */
+				
+				try {
+					byte sabotageID = Byte.parseByte(KeyEvent.getKeyText(keyCode));
 					cout.transmit(new InputMessage(sabotageID, InputMessage.SABOTAGE));
 					playingState = Comp.PLAYING_STATE_NORMAL;
+				} catch (NumberFormatException e1) {
+					
 				}
+
+				
 
 			}
 		}
