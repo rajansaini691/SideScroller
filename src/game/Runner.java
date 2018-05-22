@@ -39,7 +39,7 @@ public class Runner {
 	/**
 	 * Stores the dimensions of the runner
 	 */
-	private int height = 40, width = 30;
+	private int height, width;
 
 	/**
 	 * Determines whether the player is jumping. This way, the player can only
@@ -66,7 +66,7 @@ public class Runner {
 	private static final double GRAVITY = 0.5;
 
 	/**
-	 * Rectangle used for rendering & collision detection
+	 * Rectangle used for collision detection as an invisible hitbox
 	 */
 	private Rectangle rect;
 
@@ -79,9 +79,9 @@ public class Runner {
 	 * Variables needed for animation
 	 */
 	private static int counter;
-	private static final int frameTime = 30;
+	private static final int frameTime = 15;
 	private int currentFrame = 0;
-	private BufferedImage runningSprite;
+	private BufferedImage runnerFrames[] = new BufferedImage[4];
 
 	/**
 	 * Creates runner object
@@ -92,23 +92,43 @@ public class Runner {
 	 *            Initial y coordinate
 	 */
 	public Runner(int x, int y, Player p) {
-		this.x0 = x;
-		this.y0 = y - height;
-
-		this.x = x0;
-		this.y = y0;
-
-		rect = new Rectangle(x, y - height, width, height);
-
-		this.player = p;
-
+		
+		//Cuts up sprite into frames and puts it in runnerFrames array so it can be rendered
+		BufferedImage runningSprite = null;
 		try {
 			runningSprite = ImageIO.read(this.getClass().getResourceAsStream("/Robot.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(0);
 		}
+		
+		int imageWidth = 256/4; 
+		int imageHeight = 96;
+		
+		for(int i = 0; i < runnerFrames.length; i++) {
+			runnerFrames[i] = runningSprite.getSubimage(i * imageWidth, 0, imageWidth, imageHeight);
+		}
+		
+		/*Sets initial positional and dimensional variables*/
+		
+		//Sets height of hitbox
+		this.height = imageHeight;
+		this.width = imageWidth;
+		
+		//Sets & stores initial location
+		this.x0 = x;
+		this.y0 = y - height;
+		
+		//Sets current location equal to initial location
+		this.x = x0;
+		this.y = y0;
+		
+		//Initializes hitbox
+		rect = new Rectangle(x + 6, y - height + 10, width/2 - 10, height - 10);
+		
+		//Stores reference to player object owning the runner
+		this.player = p;
+		
 	}
 
 	/**
@@ -117,9 +137,21 @@ public class Runner {
 	 * @param win
 	 */
 	public void draw(Graphics2D win) {
+		// Draws and animates runner
+		counter++;
+		if(counter > frameTime) {
+			counter = 0;
+			currentFrame++;
+			currentFrame %= runnerFrames.length;
+		}
+		
+		win.drawImage(runnerFrames[currentFrame], x, y, null);
+		
+		
+		//Draws hitbox
 		win.setColor(Color.BLACK);
-		win.fill(rect);
-
+		win.draw(rect);
+		
 		// Handles jumping
 		if (jumping) {
 			dy -= GRAVITY;
@@ -135,7 +167,7 @@ public class Runner {
 		// Moves the player
 		y -= dy;
 		x += dx;
-		rect.setLocation(x, y);
+		rect.setLocation(x + 6, y + 10);
 
 		// Keeps the player immobilized until counter reaches 0
 		if (immobilized) {
