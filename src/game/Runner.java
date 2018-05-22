@@ -92,8 +92,9 @@ public class Runner {
 	 *            Initial y coordinate
 	 */
 	public Runner(int x, int y, Player p) {
-		
-		//Cuts up sprite into frames and puts it in runnerFrames array so it can be rendered
+
+		// Cuts up sprite into frames and puts it in runnerFrames array so it can be
+		// rendered
 		BufferedImage runningSprite = null;
 		try {
 			runningSprite = ImageIO.read(this.getClass().getResourceAsStream("/Robot.png"));
@@ -101,34 +102,34 @@ public class Runner {
 			e.printStackTrace();
 			System.exit(0);
 		}
-		
-		int imageWidth = 256/4; 
+
+		int imageWidth = 256 / 4;
 		int imageHeight = 96;
-		
-		for(int i = 0; i < runnerFrames.length; i++) {
+
+		for (int i = 0; i < runnerFrames.length; i++) {
 			runnerFrames[i] = runningSprite.getSubimage(i * imageWidth, 0, imageWidth, imageHeight);
 		}
-		
-		/*Sets initial positional and dimensional variables*/
-		
-		//Sets height of hitbox
+
+		/* Sets initial positional and dimensional variables */
+
+		// Sets height of hitbox
 		this.height = imageHeight;
 		this.width = imageWidth;
-		
-		//Sets & stores initial location
+
+		// Sets & stores initial location
 		this.x0 = x;
 		this.y0 = y - height;
-		
-		//Sets current location equal to initial location
+
+		// Sets current location equal to initial location
 		this.x = x0;
 		this.y = y0;
-		
-		//Initializes hitbox
-		rect = new Rectangle(x + 6, y - height + 10, width/2 - 10, height - 10);
-		
-		//Stores reference to player object owning the runner
+
+		// Initializes hitbox
+		rect = new Rectangle(x + 6, y - height + 10, width / 2 - 10, height - 10);
+
+		// Stores reference to player object owning the runner
 		this.player = p;
-		
+
 	}
 
 	/**
@@ -139,19 +140,15 @@ public class Runner {
 	public void draw(Graphics2D win) {
 		// Draws and animates runner
 		counter++;
-		if(counter > frameTime) {
+
+		if (counter > frameTime) {
 			counter = 0;
 			currentFrame++;
 			currentFrame %= runnerFrames.length;
 		}
-		
+
 		win.drawImage(runnerFrames[currentFrame], x, y, null);
-		
-		
-		//Draws hitbox
-		win.setColor(Color.BLACK);
-		win.draw(rect);
-		
+
 		// Handles jumping
 		if (jumping) {
 			dy -= GRAVITY;

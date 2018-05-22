@@ -31,7 +31,7 @@ public abstract class Block {
 	/**
 	 * All blocks move to the left at the same rate
 	 */
-	protected static final int SPEED = 4;
+	protected static final int SPEED = 6;
 	
 	/**
 	 * Runner whose zone the block is in
@@ -63,7 +63,7 @@ public abstract class Block {
 	 * @param player
 	 */
 	public Block(Player player) {
-		height = 50;
+		height = 30;
 		width = 30;
 		
 		x = Server.SCREEN_WIDTH - width - 10;
