@@ -137,7 +137,7 @@ public class Player {
 			
 		case InputMessage.ADD_BLOCK:
 			//blockManager.addBlock(new TestBlock(this));
-			blockManager.addBlock(new Thorn(this));
+			blockManager.addBlock(new Flower(this));
 			break;
 		
 		case InputMessage.CAN_PLACE:
@@ -177,6 +177,13 @@ public class Player {
 		blockManager = new BlockManager();
 		
 		poison = new Poison(this);		
+	}
+	
+	/**
+	 * Notifies the client that the player is now allowed to sabotage
+	 */
+	public void allowSabotage() {
+		sendMessage(new OutputMessage(ID, OutputMessage.CAN_SABOTAGE));
 	}
 	
 	/**
