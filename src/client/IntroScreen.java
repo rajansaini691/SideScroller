@@ -18,9 +18,9 @@ public class IntroScreen {
 	private Comp comp;
 	
 	public IntroScreen(Comp comp) {
-		inputPort = new InputText(130, 500, 200, 50);
+		inputPort = new InputText(130, 500, 200, 50, comp);
 		inputPort.select();
-		inputHost = new InputText(510, 500, 200, 50);
+		inputHost = new InputText(510, 500, 200, 50, comp);
 		
 		this.comp = comp;
 		

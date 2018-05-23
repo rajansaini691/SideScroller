@@ -16,7 +16,7 @@ public class Server {
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		//Initializes networking
 		int port = 2222;
 		ServerSocket ss = null;

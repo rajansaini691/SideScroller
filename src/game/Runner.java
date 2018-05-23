@@ -77,7 +77,7 @@ public class Runner {
 	 * Variables needed for animation
 	 */
 	private static int counter;
-	private static final int frameTime = 15;
+	private static final int frameTime = 30;
 	private int currentFrame = 0;
 	private BufferedImage runnerFrames[] = new BufferedImage[4];
 
@@ -89,18 +89,10 @@ public class Runner {
 	 * @param y
 	 *            Initial y coordinate
 	 */
-	public Runner(int x, int y, Player p) {
+	public Runner(int x, int y, Player p, BufferedImage runningSprite) {
 
 		// Cuts up sprite into frames and puts it in runnerFrames array so it can be
 		// rendered
-		BufferedImage runningSprite = null;
-		try {
-			runningSprite = ImageIO.read(this.getClass().getResourceAsStream("/Robot.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-
 		int imageWidth = 256 / 4;
 		int imageHeight = 96;
 

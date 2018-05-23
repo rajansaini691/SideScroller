@@ -53,7 +53,6 @@ public class Poison {
 	 */
 	public void draw(Graphics2D win) {
 		if(poisoned) {
-			//TODO - Get the poisonColor to change with each frame, dependent on counter
 			poisonColor = new Color((float) (145.0/255.0),(float) 0, (float) (186.0/255.0), (float) Math.sin(counter * Math.PI / poisonMax));
 			
 			win.setColor(poisonColor);

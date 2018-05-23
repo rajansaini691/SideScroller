@@ -13,7 +13,7 @@ public class NameScreen implements KeyListener {
 	public NameScreen(Comp comp) {
 		this.comp = comp;
 		
-		nameField = new InputText(20, 20, 400, 50);
+		nameField = new InputText(20, 20, 400, 50, comp);
 		nameField.select();
 	}
 	
@@ -38,13 +38,11 @@ public class NameScreen implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 	

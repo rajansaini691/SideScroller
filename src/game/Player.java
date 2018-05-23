@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import server.InputMessage;
 import server.OutputMessage;
@@ -65,6 +68,11 @@ public class Player {
 	 * Controls all of the blocks
 	 */
 	private BlockManager blockManager;
+	
+	/**
+	 * Holds reference to already loaded images
+	 */
+	private BufferedImage[] images;
 	
 	/*
 	 * Controls how high the floor is
@@ -129,6 +137,9 @@ public class Player {
 	 * @param command
 	 */
 	public synchronized void execute(byte command) {
+		//Don't execute any player commands until the game has started
+		if(numPlayers == 0) return;
+		
 		System.out.println("Received command: " + command);
 		
 		switch(command) {
@@ -152,8 +163,7 @@ public class Player {
 		
 		case InputMessage.SABOTAGE:
 			System.out.println("Player " + ID + " has been sabotaged");
-			// Determine sabotage, warn client, wait, activate sabotage, notify client
-			
+			activateSabotage();
 			break;
 			
 		default:
@@ -172,18 +182,24 @@ public class Player {
 	/*
 	 * Handles all inits when the game actually starts
 	 */
-	public void startGame() {
+	public void startGame(BufferedImage[] images) {
+		//Calculates height of playing area from number of players when starting the game
 		numPlayers = players.getPlayers().size();
 		gameHeight = Server.SCREEN_HEIGHT / numPlayers;
 		
-		runner = new Runner(30, ID * gameHeight - FLOOR_HEIGHT, this);
+		//Holds reference to preloaded images
+		this.images = images;
 		
+		//Creates a runner object
+		runner = new Runner(30, ID * gameHeight - FLOOR_HEIGHT, this, images[0]);
+		
+		//Calculates dimensions of playing area from number of players when starting
 		fieldTop = (ID - 1) * gameHeight;
 		fieldBottom = ID * gameHeight;
 		
+		//Instantiates game-related objects
 		blockManager = new BlockManager();
-		
-		poison = new Poison(this);		
+		poison = new Poison(this);
 	}
 	
 	/**
@@ -193,9 +209,52 @@ public class Player {
 		sendMessage(new OutputMessage(ID, OutputMessage.CAN_SABOTAGE));
 	}
 	
+	/**
+	 * Warns its client of a randomly chosen sabotage, then activates it
+	 */
 	public void activateSabotage() {
+		//Picking random sabotage
 		Random random = new Random();
-		//TODO Complete method
+		int sabotageType = random.nextInt(3); //0 - Invert, 1 - Obscure, 2 - Delay
+		
+		//Warning client
+		switch(sabotageType) {
+		case 0:
+			sendMessage(new OutputMessage(ID, OutputMessage.WARNING_REVERSE));
+			break;
+		case 1:
+			sendMessage(new OutputMessage(ID, OutputMessage.WARNING_OBSCURE));
+			break;
+		case 2:
+			sendMessage(new OutputMessage(ID, OutputMessage.WARNING_DELAY_JUMP));
+			break;
+		default:
+			System.out.println("PLAYER " + ID + " #### UNKNOWN SABOTAGE TYPE: " + sabotageType);
+		}
+		
+		//Turn the sabotage on after waiting 2 seconds
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				switch(sabotageType) {
+				case 0:
+					System.out.println("Inverting Player " + ID + "'s controls");
+					sendMessage(new OutputMessage(ID, OutputMessage.REVERSE));
+					break;
+				case 1:
+					System.out.println("Obscuring Player " + ID + "'s screen");
+					sendMessage(new OutputMessage(ID, OutputMessage.OBSCURE));
+					break;
+				case 2:
+					sendMessage(new OutputMessage(ID, OutputMessage.DELAY_JUMP));
+					break;
+				}
+				
+			}
+			
+		}, 2000);
 		
 	}
 	
@@ -208,6 +267,13 @@ public class Player {
 	}
 	
 	/**
+	 * Called when the client disconnects
+	 */
+	public void disconnect() {
+		state = STATE_DISCONNECTED;
+	}
+	
+	/**
 	 * Turns on poison overlay
 	 */
 	public void poison() {
@@ -215,17 +281,14 @@ public class Player {
 	}
 	
 	/**
-	 * Called when the client disconnects
+	 * Returns player's human-readable name
+	 * @param name
 	 */
-	public void disconnect() {
-		state = STATE_DISCONNECTED;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
 	
-	/*
+	/**
 	 * Returns name, or null if no name is yet assigned
 	 */
 	public String getName() {

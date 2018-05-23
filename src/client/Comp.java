@@ -60,8 +60,6 @@ public class Comp extends GameDriverV3 implements KeyListener {
 		this.addKeyListener(intro.getHostField());
 		this.addKeyListener(intro.getPortField());
 		
-		setGameState(STATE_PLAYING);
-		playingState = Comp.RECEIVED_SABOTAGE_REVERSE;
 	}
 
 	/**
@@ -112,12 +110,16 @@ public class Comp extends GameDriverV3 implements KeyListener {
 				win.drawString("Wait until the next round", 75, 350);
 
 			} else if (playingState == Comp.PLAYING_STATE_CAN_SABOTAGE) {
-				win.setColor(Color.BLUE);
+				win.setColor(new Color(0, 58, 76));
 				win.fillRect(0, 0, 800, 600);
 
 				win.setColor(Color.WHITE);
-				win.setFont(new Font("Yu Gothic", Font.BOLD, 100));
-				win.drawString("Press the number of the player you want to sabotage", 20, 200);
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 77));
+				win.drawString("You can sabotage!", 40, 170);
+				
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
+				win.drawString("Press the number of the player you want to sabotage.", 0, 220);
+				win.drawString("Make sure it exists and isn't yours!", 130, 270);
 
 			} else if (playingState == Comp.AWAITING_SABOTAGE_DELAY) {
 				win.setColor(new Color(60, 0, 0));
@@ -230,10 +232,37 @@ public class Comp extends GameDriverV3 implements KeyListener {
 		case OutputMessage.CAN_SABOTAGE:
 			playingState = Comp.PLAYING_STATE_CAN_SABOTAGE;
 			break;
-
+		
+		case OutputMessage.WARNING_DELAY_JUMP:
+			playingState = Comp.AWAITING_SABOTAGE_DELAY;
+			break;
+		
+		case OutputMessage.WARNING_OBSCURE:
+			playingState = Comp.AWAITING_SABOTAGE_OBSCURE;
+			break;
+			
+		case OutputMessage.WARNING_REVERSE:
+			playingState = Comp.AWAITING_SABOTAGE_REVERSE;
+			break;
+			
+		case OutputMessage.DELAY_JUMP:
+			playingState = Comp.RECEIVED_SABOTAGE_DELAY;
+			break;
+			
+		case OutputMessage.OBSCURE:
+			playingState = Comp.RECEIVED_SABOTAGE_OBSCURE;
+			break;
+			
+		case OutputMessage.REVERSE:
+			playingState = Comp.RECEIVED_SABOTAGE_REVERSE;
+			break;
+			
 		default:
 			System.out.println("Unknown message: " + message);
 		}
+		
+		//Manually refreshes window as soon as an update comes from the server
+		repaint();
 	}
 
 	/**
@@ -275,8 +304,12 @@ public class Comp extends GameDriverV3 implements KeyListener {
 				
 				try {
 					byte sabotageID = Byte.parseByte(KeyEvent.getKeyText(keyCode));
-					cout.transmit(new InputMessage(sabotageID, InputMessage.SABOTAGE));
-					playingState = Comp.PLAYING_STATE_NORMAL;
+					
+					//Transmit as long as the client does not sabotage itself
+					if(sabotageID != this.ID) {
+						cout.transmit(new InputMessage(sabotageID, InputMessage.SABOTAGE));
+						playingState = Comp.PLAYING_STATE_NORMAL;
+					}
 				} catch (NumberFormatException e1) {
 					
 				}
@@ -294,8 +327,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	/*
@@ -337,7 +369,9 @@ public class Comp extends GameDriverV3 implements KeyListener {
 				placer = new BlockPlacer(this);
 				this.addKeyListener(placer);
 			}
-
+			
+			//Refreshes window to reflect change in state
+			repaint();
 		}
 		this.gameState = gameState;
 	}

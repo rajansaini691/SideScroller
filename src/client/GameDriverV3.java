@@ -39,7 +39,9 @@ public abstract class GameDriverV3 extends Canvas  {
 		
 		
 		setVisible(true);
-		t1.scheduleAtFixedRate(new ThreadTimer(this), 0, timer);
+		
+		//Don't repeatedly update
+		t1.scheduleAtFixedRate(new ThreadTimer(this), 0, 100000000);
 		
 		setFocusable(true);
 	}

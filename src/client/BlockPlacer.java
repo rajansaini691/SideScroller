@@ -85,6 +85,9 @@ public class BlockPlacer implements KeyListener {
 					comp.transmitMessage(new InputMessage((byte) comp.getID(), InputMessage.DIE));
 					timer.cancel();
 				}
+				
+				//Manually refreshes window since the number is being drawn
+				comp.repaint();
 			}
 			
 		}, 1000, 1000);

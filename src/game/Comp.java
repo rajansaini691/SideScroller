@@ -4,22 +4,35 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Hashtable;
 
-import client.GameDriverV3;
+import javax.imageio.ImageIO;
+
+import server.GameDriverV3;
 import server.PlayerCollection;
 
-@SuppressWarnings("serial")
 public class Comp extends GameDriverV3 {
 	
 	private int gameState = 0; 			//0 - Waiting screen; 1 - Game
 	private PlayerCollection playerCollection;
 	private Hashtable<Byte, Player> players;
+	private BufferedImage[] images;
 	
 	public Comp(PlayerCollection playerCollection) {
 		this.playerCollection = playerCollection;
 		players = playerCollection.getPlayers();
 		
+		//Initializes resources: 0 - Robot
+		images = new BufferedImage[1];
+		
+		try {
+			images[0] = ImageIO.read(this.getClass().getResourceAsStream("/Robot.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
 	}
 
 	@Override
@@ -58,7 +71,7 @@ public class Comp extends GameDriverV3 {
 	
 	public void startGame() {		
 		for(byte i : players.keySet()) {
-			players.get(i).startGame();
+			players.get(i).startGame(images);
 		}
 		
 		gameState = 1;
