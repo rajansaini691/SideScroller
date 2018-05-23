@@ -10,7 +10,6 @@ import java.awt.event.KeyListener;
 import server.InputMessage;
 import server.OutputMessage;
 
-@SuppressWarnings("serial")
 public class Comp extends GameDriverV3 implements KeyListener {
 
 	private byte ID;
