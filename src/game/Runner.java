@@ -205,5 +205,13 @@ public class Runner {
 	public boolean intersects(Rectangle r) {
 		return rect.intersects(r);
 	}
+	
+	/**
+	 * Returns whether the runner is immobilized or not
+	 * @return Returns true if the runner is currently immobilized
+	 */
+	public boolean immobilized() {
+		return immobilized;
+	}
 
 }

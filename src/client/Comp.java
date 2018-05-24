@@ -226,7 +226,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 
 		case OutputMessage.FREE:
 			if (playingState != Comp.PLAYING_STATE_DEAD) {
-				playingState = Comp.PLAYING_STATE_NORMAL;
+				immobilized = false;
 			}
 			break;
 
