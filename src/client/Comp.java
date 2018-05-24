@@ -12,6 +12,11 @@ import server.OutputMessage;
 
 public class Comp extends GameDriverV3 implements KeyListener {
 
+	/**
+	 * Serial version ID for Comp
+	 */
+	private static final long serialVersionUID = 1;
+	
 	private byte ID;
 	private ClientOutput cout;
 
@@ -27,8 +32,11 @@ public class Comp extends GameDriverV3 implements KeyListener {
 	// 0 - Logging in; 1 - Sending name; 2 - Waiting for others to join; 3 - Playing
 	private int gameState = 0;
 
-	// 0 - Normal playing; 1 - immobilized; 2 - dead
+	// The mode the client is in while playing
 	private int playingState = 0;
+	
+	// Determines whether the player is immobilized; separate from the playing state
+	private boolean immobilized = false;
 
 	/*
 	 * Constants holding gameState to allow for uniformity
@@ -42,7 +50,6 @@ public class Comp extends GameDriverV3 implements KeyListener {
 	 * Constants that determine the player's condition while playing
 	 */
 	private static final int PLAYING_STATE_NORMAL = 0;
-	private static final int PLAYING_STATE_IMMOBILIZED = 1;
 	private static final int PLAYING_STATE_DEAD = 2;
 	private static final int PLAYING_STATE_CAN_SABOTAGE = 3;
 	private static final int AWAITING_SABOTAGE_REVERSE = 4;
@@ -92,13 +99,6 @@ public class Comp extends GameDriverV3 implements KeyListener {
 
 				win.setColor(Color.WHITE);
 				win.drawString("PLAYING", 150, 200);
-
-			} else if (playingState == Comp.PLAYING_STATE_IMMOBILIZED) {
-				win.setColor(new Color(68, 140, 63));
-				win.fillRect(0, 0, 800, 600);
-
-				win.setColor(Color.WHITE);
-				win.drawString("IMMOBILIZED", 40, 200);
 
 			} else if (playingState == Comp.PLAYING_STATE_DEAD) {
 				win.setColor(Color.BLACK);
@@ -194,6 +194,11 @@ public class Comp extends GameDriverV3 implements KeyListener {
 			if(playingState != Comp.PLAYING_STATE_DEAD) {
 				placer.draw(win);
 			}
+			
+			if(immobilized) {
+				//TODO Draw some sort of immobilized flag over whatever state the client is in
+				
+			}
 
 		}
 	}
@@ -215,7 +220,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 
 		case OutputMessage.IMMOBILIZED:
 			if (playingState != Comp.PLAYING_STATE_DEAD) {
-				playingState = Comp.PLAYING_STATE_IMMOBILIZED;
+				immobilized = true;
 			}
 			break;
 
