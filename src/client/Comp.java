@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import server.InputMessage;
 import server.OutputMessage;
@@ -130,7 +132,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 				win.drawString("You have been sabotaged!", 20, 200);
 				
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
-				win.drawString("Your jumps are about to get delayed by 100 ms", 45, 300);
+				win.drawString("Your jumps are about to get delayed by 150 ms", 45, 300);
 			
 			} else if(playingState == Comp.AWAITING_SABOTAGE_OBSCURE) {
 				win.setColor(new Color(0, 60, 0));
@@ -164,7 +166,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 				win.drawString("You have been sabotaged!", 20, 200);
 				
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
-				win.drawString("Your jumps are now delayed by 100 ms", 90, 300);
+				win.drawString("Your jumps are now delayed by 150 ms", 90, 300);
 				
 			} else if(playingState == Comp.RECEIVED_SABOTAGE_OBSCURE) {
 				win.setColor(new Color(0, 150, 0));
@@ -299,10 +301,27 @@ public class Comp extends GameDriverV3 implements KeyListener {
 			int keyCode = e.getKeyCode();
 
 			// When the keys are reversed, the player needs to press down instead of up to jump
-			int jumpCode = (this.playingState == Comp.RECEIVED_SABOTAGE_REVERSE)? KeyEvent.VK_DOWN : KeyEvent.VK_UP;
+			int jumpCode = (playingState == Comp.RECEIVED_SABOTAGE_REVERSE)? KeyEvent.VK_DOWN : KeyEvent.VK_UP;
 			
 			if (keyCode == jumpCode) {
-				cout.transmit(new InputMessage(ID, InputMessage.JUMP));
+				// Adds delay to the transmit if the delay is activated
+				if(playingState == Comp.RECEIVED_SABOTAGE_DELAY) {
+					
+					Timer timer = new Timer();
+					
+					timer.schedule(new TimerTask() {
+
+						@Override
+						public void run() {
+							cout.transmit(new InputMessage(ID, InputMessage.JUMP));
+						}
+						
+					}, 150);
+					
+				} else {
+					// Transmits the jump message as normal
+					cout.transmit(new InputMessage(ID, InputMessage.JUMP));
+				}
 			}
 
 			if (playingState == Comp.PLAYING_STATE_CAN_SABOTAGE) {

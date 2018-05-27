@@ -258,7 +258,7 @@ public class Player {
 		Random random = new Random();
 		
 		//int sabotageType = random.nextInt(3); // 0 - Invert, 1 - Obscure, 2 - Delay
-		int sabotageType = 0;
+		int sabotageType = 2;
 		
 		
 		// Warning client
