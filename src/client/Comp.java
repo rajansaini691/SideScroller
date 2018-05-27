@@ -298,7 +298,10 @@ public class Comp extends GameDriverV3 implements KeyListener {
 		if (gameState == STATE_PLAYING) {
 			int keyCode = e.getKeyCode();
 
-			if (keyCode == KeyEvent.VK_UP) {
+			// When the keys are reversed, the player needs to press down instead of up to jump
+			int jumpCode = (this.playingState == Comp.RECEIVED_SABOTAGE_REVERSE)? KeyEvent.VK_DOWN : KeyEvent.VK_UP;
+			
+			if (keyCode == jumpCode) {
 				cout.transmit(new InputMessage(ID, InputMessage.JUMP));
 			}
 

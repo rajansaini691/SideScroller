@@ -256,8 +256,9 @@ public class Player {
 	public void activateSabotage() {
 		// Picking random sabotage
 		Random random = new Random();
+		
 		//int sabotageType = random.nextInt(3); // 0 - Invert, 1 - Obscure, 2 - Delay
-		int sabotageType = 1;
+		int sabotageType = 0;
 		
 		
 		// Warning client
