@@ -19,5 +19,6 @@ public class OutputMessage extends Message {
 	public static final byte REVERSE = 118;
 	public static final byte OBSCURE = 117;
 	public static final byte DELAY_JUMP = 116;
+	public static final byte RELEASE = 115;
 	
 }
