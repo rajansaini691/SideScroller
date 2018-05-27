@@ -50,6 +50,11 @@ public class Player {
 	private int fieldTop, fieldBottom;
 
 	/**
+	 * Main Obscurer overlay
+	 */
+	private Obscurer obscure;
+	
+	/**
 	 * Main poison overlay
 	 */
 	private Poison poison;
@@ -90,7 +95,6 @@ public class Player {
 	 */
 	private static final int STATE_ALIVE = 0;
 	private static final int STATE_DISCONNECTED = 1;
-	@SuppressWarnings("unused")
 	private static final int STATE_DEAD = 2;
 
 	/**
@@ -137,6 +141,11 @@ public class Player {
 
 			// Draws poison overlay
 			poison.draw(win);
+			
+			// Draws obscurer overlay
+			if (sabotageState == SABOTAGE_OBSCURE) {
+				obscure.draw(win);
+			}
 
 		} else if (state == STATE_DISCONNECTED) {
 			// Draws background
@@ -148,7 +157,7 @@ public class Player {
 			win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			win.setFont(new Font("Century Gothic", Font.PLAIN, 50));
 			win.drawString("I'M DISCONNECTED! :(", 70, fieldTop + 30);
-
+			
 		}
 
 	}
@@ -229,6 +238,7 @@ public class Player {
 		// Instantiates game-related objects
 		blockManager = new BlockManager();
 		poison = new Poison(this);
+		obscure = new Obscurer(this);
 	}
 
 	/**
@@ -246,8 +256,10 @@ public class Player {
 	public void activateSabotage() {
 		// Picking random sabotage
 		Random random = new Random();
-		int sabotageType = random.nextInt(3); // 0 - Invert, 1 - Obscure, 2 - Delay
-
+		//int sabotageType = random.nextInt(3); // 0 - Invert, 1 - Obscure, 2 - Delay
+		int sabotageType = 1;
+		
+		
 		// Warning client
 		switch (sabotageType) {
 		case 0:
@@ -266,7 +278,7 @@ public class Player {
 		// Changes state to a warned state
 		this.sabotageState = Player.SABOTAGE_WARNED;
 
-		// Turn the sabotage on after waiting 2 seconds
+		// Turn the sabotage on after waiting 5 seconds
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 
@@ -313,7 +325,7 @@ public class Player {
 
 			}
 
-		}, 2000);
+		}, 5000);
 
 		// TODO Set state to SABOTAGED or "sabotaged" boolean to true
 
