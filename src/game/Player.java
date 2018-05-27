@@ -257,9 +257,7 @@ public class Player {
 		// Picking random sabotage
 		Random random = new Random();
 		
-		//int sabotageType = random.nextInt(3); // 0 - Invert, 1 - Obscure, 2 - Delay
-		int sabotageType = 2;
-		
+		int sabotageType = random.nextInt(3); // 0 - Invert, 1 - Obscure, 2 - Delay		
 		
 		// Warning client
 		switch (sabotageType) {
@@ -328,7 +326,15 @@ public class Player {
 
 		}, 5000);
 
-		// TODO Set state to SABOTAGED or "sabotaged" boolean to true
+		//Release the sabotage after 15 seconds
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				releaseSabotage();
+			}
+			
+		}, 15000);
 
 	}
 
@@ -352,6 +358,15 @@ public class Player {
 	 */
 	public void poison() {
 		poison.startPoison(100);
+	}
+	
+	/**
+	 * Frees the player from any activated sabotages and notifies client
+	 */
+	public void releaseSabotage() {
+		sabotageState = SABOTAGE_NONE;
+		sendMessage(new OutputMessage(ID, OutputMessage.RELEASE));
+		System.out.println("Releasing " + name + "'s sabotage");
 	}
 
 	/**

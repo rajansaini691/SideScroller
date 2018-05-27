@@ -263,6 +263,9 @@ public class Comp extends GameDriverV3 implements KeyListener {
 		case OutputMessage.REVERSE:
 			playingState = Comp.RECEIVED_SABOTAGE_REVERSE;
 			break;
+		
+		case OutputMessage.RELEASE:
+			playingState = Comp.PLAYING_STATE_NORMAL;
 			
 		default:
 			System.out.println("Unknown message: " + message);
