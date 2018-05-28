@@ -53,7 +53,7 @@ public class Player {
 	 * Main Obscurer overlay
 	 */
 	private Obscurer obscure;
-	
+
 	/**
 	 * Main poison overlay
 	 */
@@ -141,7 +141,7 @@ public class Player {
 
 			// Draws poison overlay
 			poison.draw(win);
-			
+
 			// Draws obscurer overlay
 			if (sabotageState == SABOTAGE_OBSCURE) {
 				obscure.draw(win);
@@ -157,7 +157,20 @@ public class Player {
 			win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			win.setFont(new Font("Century Gothic", Font.PLAIN, 50));
 			win.drawString("I'M DISCONNECTED! :(", 70, fieldTop + 30);
+
+		} else if (state == STATE_DEAD) {
+			// Draws background
+			win.setColor(Color.BLACK);
+			win.fillRect(0, fieldTop, Server.SCREEN_WIDTH, gameHeight);
 			
+			// Draws "PLAYER ended with x points"
+			// TODO Change hardcoded 10 to actual number of points
+			win.setColor(Color.GRAY);
+			win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			win.setFont(new Font("Century Gothic", Font.PLAIN, 40));
+			win.drawString(name + " ended with  10 points", 70, fieldTop + 70);
+			
+
 		}
 
 	}
@@ -172,37 +185,48 @@ public class Player {
 		if (numPlayers == 0)
 			return;
 
-		System.out.println("Received command: " + command);
+		System.out.println(name + " received command " + command);
+		
+		// If the player is alive, it will execute commands related to playing
+		if (state == STATE_ALIVE) {
+			switch (command) {
+			case InputMessage.JUMP:
+				runner.jump();
+				break;
 
-		switch (command) {
-		case InputMessage.JUMP:
-			runner.jump();
-			break;
+			case InputMessage.ADD_BLOCK:
+				blockManager.addBlock(this);
+				break;
 
-		case InputMessage.ADD_BLOCK:
-			blockManager.addBlock(this);
-			break;
+			case InputMessage.CAN_PLACE:
+				sendMessage(new OutputMessage(ID, OutputMessage.CAN_PLACE));
+				break;
 
-		case InputMessage.CAN_PLACE:
-			sendMessage(new OutputMessage(ID, OutputMessage.CAN_PLACE));
-			break;
+			// Received when the blockPlace count goes to 0
+			case InputMessage.DIE:
+				die();
+				break;
 
-		// Received when the blockPlace count goes to 0
-		case InputMessage.DIE:
-			die();
-			break;
+			case InputMessage.SABOTAGE:
+				System.out.println("Player " + ID + " has been sabotaged");
 
-		case InputMessage.SABOTAGE:
-			System.out.println("Player " + ID + " has been sabotaged");
+				if (this.state != STATE_DEAD && this.sabotageState == SABOTAGE_NONE) {
+					activateSabotage();
+				}
 
-			if (this.state != STATE_DEAD && this.sabotageState == SABOTAGE_NONE) {
-				activateSabotage();
+				break;
+
+			default:
+				System.out.println("Received unknown command: " + command);
 			}
-
-			break;
-
-		default:
-			System.out.println("Received unknown command: " + command);
+		} else {
+			// Commands to be executed when the player is dead
+			switch(command) {
+			
+			//Tell client to pass their placing responsibility to the next player
+			case InputMessage.CAN_PLACE:
+				sendMessage(new OutputMessage(ID, OutputMessage.DONT_PLACE));
+			}
 		}
 	}
 
@@ -255,9 +279,9 @@ public class Player {
 	public void activateSabotage() {
 		// Picking random sabotage
 		Random random = new Random();
-		
-		int sabotageType = random.nextInt(3); // 0 - Invert, 1 - Obscure, 2 - Delay		
-		
+
+		int sabotageType = random.nextInt(3); // 0 - Invert, 1 - Obscure, 2 - Delay
+
 		// Warning client
 		switch (sabotageType) {
 		case 0:
@@ -305,18 +329,18 @@ public class Player {
 					// Change state to an active OBSCURED state
 					sabotageState = Player.SABOTAGE_OBSCURE;
 					break;
-					
+
 				case 2:
 					// Debug sabotage activation
 					System.out.println("Delaying Player " + ID + "'s jumping");
 
 					// Notify client of sabotage decision (Delay)
 					sendMessage(new OutputMessage(ID, OutputMessage.DELAY_JUMP));
-					
+
 					// Change state to an active OBSCURED state
 					sabotageState = Player.SABOTAGE_DELAY;
 					break;
-					
+
 				default:
 					System.out.println("Player " + ID + ": Unknown sabotage state " + sabotageState);
 				}
@@ -325,14 +349,14 @@ public class Player {
 
 		}, 5000);
 
-		//Release the sabotage after 15 seconds
+		// Release the sabotage after 15 seconds
 		timer.schedule(new TimerTask() {
-			
+
 			@Override
 			public void run() {
 				releaseSabotage();
 			}
-			
+
 		}, 15000);
 
 	}
@@ -342,6 +366,7 @@ public class Player {
 	 */
 	public void die() {
 		System.out.println(name + " died");
+		state = STATE_DEAD;
 		sendMessage(new OutputMessage(ID, OutputMessage.DIE));
 	}
 
@@ -358,7 +383,7 @@ public class Player {
 	public void poison() {
 		poison.startPoison(100);
 	}
-	
+
 	/**
 	 * Frees the player from any activated sabotages and notifies client
 	 */

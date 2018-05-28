@@ -35,6 +35,8 @@ public class Comp extends GameDriverV3 {
 		}
 	}
 
+	
+	// TODO Draw IP address to screen OR create a mapping to letters (last priority)
 	@Override
 	public void draw(Graphics2D win) {
 		if(gameState == 0) {				//Draws waiting screen

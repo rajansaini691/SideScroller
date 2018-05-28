@@ -211,6 +211,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 	 * @param message
 	 */
 	public synchronized void process(byte message) {
+	
 		switch (message) {
 		case OutputMessage.START_GAME:
 			setGameState(Comp.STATE_PLAYING);
@@ -266,7 +267,11 @@ public class Comp extends GameDriverV3 implements KeyListener {
 		
 		case OutputMessage.RELEASE:
 			playingState = Comp.PLAYING_STATE_NORMAL;
-			
+			break;
+		
+		case OutputMessage.DONT_PLACE:
+			transmitMessage(new InputMessage((byte) (ID + 1), InputMessage.CAN_PLACE));
+			break;
 		default:
 			System.out.println("Unknown message: " + message);
 		}
