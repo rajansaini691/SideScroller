@@ -100,6 +100,16 @@ public class PlayerCollection {
 	}
 	
 	/**
+	 * Resets each player's state, but does not start the game
+	 */
+	public synchronized void reset() {
+		for(Byte i : players.keySet()) {
+			Player previousPlayer = players.get(i);
+			players.put(i, new Player(previousPlayer.getID(), this));
+		}
+	}
+	
+	/**
 	 * Returns the player when given a key
 	 * @param key
 	 * @return

@@ -15,10 +15,16 @@ import server.PlayerCollection;
 
 public class Comp extends GameDriverV3 {
 	
-	private int gameState = 0; 			//0 - Waiting screen; 1 - Game
+	private int gameState = 0; 			//0 - Waiting screen; 1 - Game; 2 - Leaderboard
 	private PlayerCollection playerCollection;
 	private Hashtable<Byte, Player> players;
 	private BufferedImage[] images;
+	
+	/**
+	 * Stores the number of players so that it can reset the game.
+	 * Defaults to 100 at first so that the game doesn't accidentally reset
+	 */
+	private static int numPlayers = 100;
 	
 	public Comp(PlayerCollection playerCollection) {
 		this.playerCollection = playerCollection;
@@ -68,13 +74,40 @@ public class Comp extends GameDriverV3 {
 		} else if(gameState == 1) {
 			//Draw players
 			playerCollection.draw(win);
+			
+			//Controls death
+			if(numPlayers < 1) {
+				restartGame();
+				gameState = 2;
+			}
+		} else if (gameState == 2) {
+			//TODO Draw leaderboard
+			win.setColor(new Color(189, 255, 140));
+			win.fillRect(0, 0, 800, 600);
 		}
+	}
+	
+	/**
+	 * Lowers the number of players by 1 whenever a player dies
+	 */
+	public static void decrementNumPlayers() {
+		numPlayers--;
+	}
+	
+	/**
+	 * Reinstantiates all players
+	 */
+	public void restartGame() {
+		// Reinstantiates all players
+		playerCollection.reset();
 	}
 	
 	public void startGame() {		
 		for(byte i : players.keySet()) {
 			players.get(i).startGame(images);
 		}
+		
+		numPlayers = players.size();
 		
 		gameState = 1;
 	}
