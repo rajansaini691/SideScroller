@@ -38,7 +38,7 @@ public class BlockManager {
 			block.draw(win);
 			
 			//Puts offending block in list of blocks to be removed
-			if(block.getX() + block.getWidth() < 0) {
+			if(block.isObsolete()) {
 				removeQueue.add(block);
 			}
 		}

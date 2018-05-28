@@ -59,6 +59,11 @@ public abstract class Block {
 	protected Player player;
 	
 	/**
+	 * When the block is obsolete, it will be flagged for deletion
+	 */
+	private boolean obsolete = false;
+	
+	/**
 	 * Creates a block in the player's field
 	 * @param player
 	 */
@@ -100,14 +105,29 @@ public abstract class Block {
 			
 		}
 		
+		//Draws block in new location
 		rect.setLocation(x, y);
 		win.setColor(color);
 		win.fill(rect);
 		
-		if(runner.intersects(rect)) {
-			collideWithPlayer(player);
+		//Conditions for block deletion
+		if(this.x + this.width < 0) {
+			obsolete = true;
 		}
 		
+		if(runner.intersects(rect)) {
+			collideWithPlayer(player);
+			obsolete = true;
+		}
+		
+	}
+	
+	/**
+	 * If the block is obsolete, they should be marked for deletion off of the screen
+	 * @return Returns whether the block is obsolete
+	 */
+	public boolean isObsolete() {
+		return obsolete;
 	}
 	
 	public int getX() {
