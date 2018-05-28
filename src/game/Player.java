@@ -180,8 +180,7 @@ public class Player {
 			break;
 
 		case InputMessage.ADD_BLOCK:
-			// blockManager.addBlock(new TestBlock(this));
-			blockManager.addBlock(new Flower(this));
+			blockManager.addBlock(this);
 			break;
 
 		case InputMessage.CAN_PLACE:

@@ -2,6 +2,7 @@ package game;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * The BlockManager creates, maintains, draws, and destroys blocks
@@ -50,10 +51,34 @@ public class BlockManager {
 	}
 	
 	/**
-	 * Adds a new block object to the list of blocks
+	 * Generates a randomly chosen block
 	 * @param block
 	 */
-	public synchronized void addBlock(Block block) {
+	public synchronized void addBlock(Player p) {
+		// Block to be added
+		Block block;
+		
+		double random = Math.random();
+		
+		/*
+		 * The block will have a:
+		 * 		50% chance of becoming a cactus
+		 * 		20% chance of becoming a thorn
+		 * 		20% chance of becoming grass
+		 * 		10% chance of becoming a flower
+		 */
+		if(random < 0.5) {
+			block = new Cactus(p);
+		} else if(random < 0.7) {
+			block = new Thorn(p);
+		} else if(random < 0.9) {
+			block = new Grass(p);
+		} else {
+			block = new Flower(p);
+		}
+		
+		// Adds the block to list of blocks so that it can be drawn and accessed globally
+		// (obviously without breaking encapsulation).
 		blocks.add(block);
 	}
 	

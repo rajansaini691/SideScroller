@@ -1,5 +1,10 @@
 package game;
 
+/**
+ * Block used for testing; will not be used in final game
+ * @author Rajan Saini
+ *
+ */
 public class TestBlock extends Block {
 
 	public TestBlock(Player player) {
