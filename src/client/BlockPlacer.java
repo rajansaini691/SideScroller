@@ -83,6 +83,7 @@ public class BlockPlacer implements KeyListener {
 				
 				if(counter == 0) {
 					comp.transmitMessage(new InputMessage((byte) comp.getID(), InputMessage.DIE));
+					comp.transmitMessage(new InputMessage((byte) (comp.getID() + 1), InputMessage.CAN_PLACE));
 					timer.cancel();
 				}
 				
