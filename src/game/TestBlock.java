@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.image.BufferedImage;
+
 /**
  * Block used for testing; will not be used in final game
  * @author Rajan Saini
@@ -16,6 +18,12 @@ public class TestBlock extends Block {
 	public void collideWithPlayer(Player p) {
 		//Do nothing when you collide; this is just to test
 		
+	}
+
+	@Override
+	protected BufferedImage getImage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 public class Grass extends Block {
 
@@ -14,6 +15,12 @@ public class Grass extends Block {
 	public void collideWithPlayer(Player p) {
 		p.getRunner().immobilize(100);
 		p.raiseScore(150);
+	}
+
+	@Override
+	protected BufferedImage getImage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -37,11 +37,12 @@ public class Comp extends GameDriverV3 {
 		this.playerCollection = playerCollection;
 		players = playerCollection.getPlayers();
 		
-		//Initializes resources: 0 - Robot
-		images = new BufferedImage[1];
+		//Initializes resources: 0 - Robot, 1 - Cactus
+		images = new BufferedImage[2];
 		
 		try {
 			images[0] = ImageIO.read(this.getClass().getResourceAsStream("/Robot.png"));
+			images[1] = ImageIO.read(this.getClass().getResourceAsStream("/cactus.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
