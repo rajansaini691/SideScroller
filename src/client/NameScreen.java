@@ -33,9 +33,9 @@ public class NameScreen implements KeyListener {
 		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 			String name = nameField.getMessage();
 			
-			if(name.length() == 0) name += " ";
+			if(name.length() == 0) name = " ";
 			
-			comp.transmitString(nameField.getMessage());
+			comp.transmitString(name);
 			comp.setGameState(2);
 		}
 	}
