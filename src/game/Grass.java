@@ -13,6 +13,7 @@ public class Grass extends Block {
 	@Override
 	public void collideWithPlayer(Player p) {
 		p.getRunner().immobilize(100);
+		p.raiseScore(150);
 	}
 
 }

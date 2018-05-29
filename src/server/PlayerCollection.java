@@ -81,7 +81,7 @@ public class PlayerCollection {
 	 * @param ID
 	 */
 	public synchronized void addPlayer(byte ID) {
-		players.put(ID, new Player(ID, this));
+		players.put(ID, new Player(ID, this, 0));
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class PlayerCollection {
 		
 		for(Byte i : players.keySet()) {
 			Player previousPlayer = players.get(i);
-			players.put(i, new Player(previousPlayer.getID(), this));
+			players.put(i, new Player(previousPlayer.getID(), this, previousPlayer.getScore()));
 			players.get(i).setName(previousPlayer.getName());
 			
 			leaderboard.addPlayer(previousPlayer.getID(), previousPlayer.getName(), previousPlayer.getScore());

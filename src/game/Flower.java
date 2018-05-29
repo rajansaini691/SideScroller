@@ -12,6 +12,7 @@ public class Flower extends Block {
 	@Override
 	public void collideWithPlayer(Player p) {
 		p.allowSabotage();
+		p.raiseScore(75);
 	}
 
 }

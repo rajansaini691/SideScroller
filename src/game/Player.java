@@ -117,12 +117,10 @@ public class Player {
 	 * @param ID
 	 * @param players
 	 */
-	public Player(byte ID, PlayerCollection players) {
+	public Player(byte ID, PlayerCollection players, int score) {
 		this.ID = ID;
 		this.players = players;
-		
-		//TODO Remove this (used to test sorting of players by score)
-		score = (int) (Math.random() * 1000);
+		this.score = score;
 	}
 
 	public void draw(Graphics2D win) {
@@ -137,6 +135,12 @@ public class Player {
 			win.setFont(new Font("Century Gothic", Font.PLAIN, 30));
 			win.drawString(name, 30, fieldTop + 30);
 
+			// Draws player's score
+			win.setColor(Color.BLACK);
+			win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			win.setFont(new Font("Century Gothic", Font.ROMAN_BASELINE, 30));
+			win.drawString("" + score, Server.SCREEN_WIDTH - 140, fieldTop + 30);
+			
 			// Draws runner
 			runner.draw(win);
 
@@ -323,6 +327,9 @@ public class Player {
 
 					// Change state to an active REVERSED state
 					sabotageState = Player.SABOTAGE_REVERSE;
+					
+					//Raise the score by 250 pts
+					raiseScore(250);
 
 					break;
 
@@ -335,6 +342,9 @@ public class Player {
 
 					// Change state to an active OBSCURED state
 					sabotageState = Player.SABOTAGE_OBSCURE;
+					
+					//Raise score by 100 pts
+					raiseScore(100);
 					break;
 
 				case 2:
@@ -346,6 +356,9 @@ public class Player {
 
 					// Change state to an active OBSCURED state
 					sabotageState = Player.SABOTAGE_DELAY;
+					
+					//Raise score by 200 pts
+					raiseScore(200);
 					break;
 
 				default:
@@ -392,6 +405,14 @@ public class Player {
 		poison.startPoison(100);
 	}
 
+	/**
+	 * Raises the client's score by the specified amount
+	 * @param score the amount to be raised
+	 */
+	public void raiseScore(int score) {
+		this.score += score;
+	}
+	
 	/**
 	 * Frees the player from any activated sabotages and notifies client
 	 */

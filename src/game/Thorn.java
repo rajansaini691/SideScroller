@@ -12,6 +12,7 @@ public class Thorn extends Block {
 	@Override
 	public void collideWithPlayer(Player p) {
 		p.poison();
+		p.raiseScore(150);
 	}
 	
 }

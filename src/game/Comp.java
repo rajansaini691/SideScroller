@@ -87,10 +87,8 @@ public class Comp extends GameDriverV3 {
 				gameState = 2;
 			}
 		} else if (gameState == 2) {
-			//TODO Draw leaderboard
 			win.setColor(new Color(189, 255, 140));
 			win.fillRect(0, 0, 800, 600);
-			
 			
 			playerCollection.getLeaderboard().draw(win);
 			
