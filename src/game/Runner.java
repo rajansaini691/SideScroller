@@ -21,7 +21,7 @@ public class Runner {
 	/**
 	 * The initial jumping speed of the runner (v0)
 	 */
-	private static final int JUMP_SPEED = 8;
+	private static final int JUMP_SPEED = 10;
 
 	/**
 	 * Stores the initial locations of the runner. This way, it always ends up where
@@ -61,7 +61,7 @@ public class Runner {
 	/**
 	 * Controls the strength of gravity when the runner jumps
 	 */
-	private static final double GRAVITY = 0.5;
+	private static final double GRAVITY = 0.55;
 
 	/**
 	 * Rectangle used for collision detection as an invisible hitbox

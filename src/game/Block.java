@@ -3,6 +3,7 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import server.Server;
 
@@ -92,6 +93,7 @@ public abstract class Block {
 	 * @param win
 	 */
 	public void draw(Graphics2D win) {
+		
 		if((y + rect.getHeight() + dy) < (fieldBottom - Player.FLOOR_HEIGHT)) {
 			//Brick falls
 			dy += 0.3;
@@ -107,8 +109,16 @@ public abstract class Block {
 		
 		//Draws block in new location
 		rect.setLocation(x, y);
-		win.setColor(color);
-		win.fill(rect);
+		
+		//Draws image if it exists
+		BufferedImage image = getImage();
+		
+		if(image != null) {
+			win.drawImage(image, x, (int) (y + rect.getHeight() - image.getHeight()), null);
+		} else {
+			win.setColor(color);
+			win.fill(rect);
+		}
 		
 		//Conditions for block deletion
 		if(this.x + this.width < 0) {
@@ -151,4 +161,6 @@ public abstract class Block {
 	 * @param p
 	 */
 	public abstract void collideWithPlayer(Player p);
+
+	protected abstract BufferedImage getImage();
 }

@@ -145,7 +145,7 @@ public class Player {
 			runner.draw(win);
 
 			// Draws floor
-			win.setColor(Color.BLACK);
+			win.setColor(new Color(0, 48, 4));
 			win.fillRect(0, fieldBottom - FLOOR_HEIGHT, Server.SCREEN_WIDTH, FLOOR_HEIGHT);
 
 			// Draws blocks
@@ -467,6 +467,14 @@ public class Player {
 
 	public byte getID() {
 		return this.ID;
+	}
+	
+	/**
+	 * Lets the other nodes reference the player images so that they can draw them
+	 * @return image objects
+	 */
+	public BufferedImage[] getImages() {
+		return images;
 	}
 	
 	/**
