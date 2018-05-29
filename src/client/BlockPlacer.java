@@ -72,6 +72,7 @@ public class BlockPlacer implements KeyListener {
 		counter = 5;
 		
 		//Resets timer, since a timer must be reset after cancellation
+		timer.cancel();
 		timer = new Timer();
 		
 		//Start decrementing the counter. If it hits zero, tell the player to die
@@ -92,6 +93,10 @@ public class BlockPlacer implements KeyListener {
 			}
 			
 		}, 1000, 1000);
+	}
+	
+	public void cancelTimer() {
+		timer.cancel();
 	}
 
 	@Override

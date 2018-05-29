@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import game.Leaderboard;
 import game.Player;
 
 /**
@@ -16,6 +17,11 @@ public class PlayerCollection {
 	 * Stores all players in a hashable form, so that players can be looked up
 	 */
 	private Hashtable<Byte, Player> players;
+	
+	/**
+	 * Stores leaderboard object so it can be filled upon reset
+	 */
+	private Leaderboard leaderboard;
 	
 	/**
 	 * Bridges between main game state and sockets
@@ -47,6 +53,9 @@ public class PlayerCollection {
 			
 		} else if(messageID > players.size() + 1) {
 			System.out.println("Player with ID " + messageID + " does not exist");
+			
+		} else if(command == InputMessage.READY_FOR_RESTART) {
+			leaderboard.ready(messageID);
 			
 		} else {
 			/*
@@ -103,10 +112,17 @@ public class PlayerCollection {
 	 * Resets each player's state, but does not start the game
 	 */
 	public synchronized void reset() {
+		leaderboard = new Leaderboard(players.size());
+		
 		for(Byte i : players.keySet()) {
 			Player previousPlayer = players.get(i);
 			players.put(i, new Player(previousPlayer.getID(), this));
+			players.get(i).setName(previousPlayer.getName());
+			
+			leaderboard.addPlayer(previousPlayer.getID(), previousPlayer.getName(), previousPlayer.getScore());
 		}
+		
+		leaderboard.sortPlayers();
 	}
 	
 	/**
@@ -138,7 +154,26 @@ public class PlayerCollection {
 		}
 	}
 	
+	/**
+	 * Sends a message to all clients
+	 * @param message Message to be broadcast
+	 */
+	public void broadcastMessage(byte message) {
+		for(Byte i : players.keySet()) {
+			bridge.messageOut(new OutputMessage(i, message));
+		}
+	}
+	
 	public Hashtable<Byte, Player> getPlayers() {
 		return players;
 	}
+	
+	/**
+	 * Gives other classes access to the leaderboard object so that it can be drawn
+	 * @return
+	 */
+	public Leaderboard getLeaderboard() {
+		return leaderboard;
+	}
+	
 }

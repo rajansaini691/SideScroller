@@ -69,6 +69,11 @@ public class Player {
 	 * currently experiencing
 	 */
 	private int sabotageState = 0;
+	
+	/**
+	 * Holds the player's score
+	 */
+	private int score = 0;
 
 	/**
 	 * Determines whether player is alive, dead, or disconnected
@@ -85,7 +90,7 @@ public class Player {
 	 */
 	private BufferedImage[] images;
 
-	/*
+	/**
 	 * Controls how high the floor is
 	 */
 	public static final int FLOOR_HEIGHT = 10;
@@ -115,6 +120,9 @@ public class Player {
 	public Player(byte ID, PlayerCollection players) {
 		this.ID = ID;
 		this.players = players;
+		
+		//TODO Remove this (used to test sorting of players by score)
+		score = (int) (Math.random() * 1000);
 	}
 
 	public void draw(Graphics2D win) {
@@ -164,11 +172,10 @@ public class Player {
 			win.fillRect(0, fieldTop, Server.SCREEN_WIDTH, gameHeight);
 			
 			// Draws "PLAYER ended with x points"
-			// TODO Change hardcoded 10 to actual number of points
 			win.setColor(Color.GRAY);
 			win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			win.setFont(new Font("Century Gothic", Font.PLAIN, 40));
-			win.drawString(name + " ended with  10 points", 70, fieldTop + 70);
+			win.setFont(new Font("Century Gothic", Font.PLAIN, 35));
+			win.drawString(name + " ended with " + score + " points", 70, fieldTop + 70);
 			
 
 		}
@@ -439,6 +446,14 @@ public class Player {
 
 	public byte getID() {
 		return this.ID;
+	}
+	
+	/**
+	 * Returns score of player
+	 * @return
+	 */
+	public int getScore() {
+		return score;
 	}
 
 	/**

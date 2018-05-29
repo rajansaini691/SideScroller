@@ -18,7 +18,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 	 * Serial version ID for Comp
 	 */
 	private static final long serialVersionUID = 1;
-	
+
 	private byte ID;
 	private ClientOutput cout;
 
@@ -36,7 +36,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 
 	// The mode the client is in while playing
 	private int playingState = 0;
-	
+
 	// Determines whether the player is immobilized; separate from the playing state
 	private boolean immobilized = false;
 
@@ -47,6 +47,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 	private static final int STATE_SENDING_NAME = 1;
 	private static final int STATE_WAITING_FOR_GAME = 2;
 	private static final int STATE_PLAYING = 3;
+	private static final int STATE_WAITING_FOR_RESTART = 4;
 
 	/*
 	 * Constants that determine the player's condition while playing
@@ -60,15 +61,15 @@ public class Comp extends GameDriverV3 implements KeyListener {
 	private static final int RECEIVED_SABOTAGE_OBSCURE = 7;
 	private static final int AWAITING_SABOTAGE_DELAY = 8;
 	private static final int RECEIVED_SABOTAGE_DELAY = 9;
-	
+
 	public Comp() {
-		intro = new IntroScreen(this); 
+		intro = new IntroScreen(this);
 		nameScreen = new NameScreen(this);
 
 		this.addKeyListener(this);
 		this.addKeyListener(intro.getHostField());
 		this.addKeyListener(intro.getPortField());
-		
+
 	}
 
 	/**
@@ -118,7 +119,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 				win.setColor(Color.WHITE);
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 77));
 				win.drawString("You can sabotage!", 40, 170);
-				
+
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
 				win.drawString("Press the number of the player you want to sabotage.", 0, 220);
 				win.drawString("Make sure it exists and isn't yours!", 130, 270);
@@ -126,82 +127,95 @@ public class Comp extends GameDriverV3 implements KeyListener {
 			} else if (playingState == Comp.AWAITING_SABOTAGE_DELAY) {
 				win.setColor(new Color(60, 0, 0));
 				win.fillRect(0, 0, 800, 600);
-				
+
 				win.setColor(Color.WHITE);
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
 				win.drawString("You have been sabotaged!", 20, 200);
-				
+
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
 				win.drawString("Your jumps are about to get delayed by 150 ms", 45, 300);
-			
-			} else if(playingState == Comp.AWAITING_SABOTAGE_OBSCURE) {
+
+			} else if (playingState == Comp.AWAITING_SABOTAGE_OBSCURE) {
 				win.setColor(new Color(0, 60, 0));
 				win.fillRect(0, 0, 800, 600);
-				
+
 				win.setColor(Color.WHITE);
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
 				win.drawString("You have been sabotaged!", 20, 200);
-				
+
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
 				win.drawString("Your screen is about to get obscured", 100, 300);
-				
-			} else if(playingState == Comp.AWAITING_SABOTAGE_REVERSE) {
+
+			} else if (playingState == Comp.AWAITING_SABOTAGE_REVERSE) {
 				win.setColor(new Color(0, 0, 60));
 				win.fillRect(0, 0, 800, 600);
-				
+
 				win.setColor(Color.WHITE);
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
 				win.drawString("You have been sabotaged!", 20, 200);
-				
+
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
 				win.drawString("Your controls are about to get inverted", 100, 250);
 				win.drawString("(down = jump)", 275, 300);
-				
-			} else if(playingState == Comp.RECEIVED_SABOTAGE_DELAY) {
+
+			} else if (playingState == Comp.RECEIVED_SABOTAGE_DELAY) {
 				win.setColor(new Color(150, 0, 0));
 				win.fillRect(0, 0, 800, 600);
-				
+
 				win.setColor(Color.WHITE);
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
 				win.drawString("You have been sabotaged!", 20, 200);
-				
+
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
 				win.drawString("Your jumps are now delayed by 150 ms", 90, 300);
-				
-			} else if(playingState == Comp.RECEIVED_SABOTAGE_OBSCURE) {
+
+			} else if (playingState == Comp.RECEIVED_SABOTAGE_OBSCURE) {
 				win.setColor(new Color(0, 150, 0));
 				win.fillRect(0, 0, 800, 600);
-				
+
 				win.setColor(Color.WHITE);
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
 				win.drawString("You have been sabotaged!", 20, 200);
-				
+
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
 				win.drawString("Your screen is now obscured", 165, 300);
-				
-			} else if(playingState == Comp.RECEIVED_SABOTAGE_REVERSE) {
+
+			} else if (playingState == Comp.RECEIVED_SABOTAGE_REVERSE) {
 				win.setColor(new Color(61, 64, 158));
 				win.fillRect(0, 0, 800, 600);
-				
+
 				win.setColor(Color.WHITE);
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 58));
 				win.drawString("You have been sabotaged!", 20, 200);
-				
+
 				win.setFont(new Font("Yu Gothic", Font.BOLD, 30));
 				win.drawString("Your controls are now inverted!", 155, 250);
 				win.drawString("(down = jump)", 277, 300);
-			} 
-			
-			// Only draw the placing counter while the client is alive
-			if(playingState != Comp.PLAYING_STATE_DEAD) {
-				placer.draw(win);
-			}
-			
-			if(immobilized) {
-				//TODO Draw some sort of immobilized flag over whatever state the client is in
-				
 			}
 
+			// Only draw the placing counter while the client is alive
+			if (playingState != Comp.PLAYING_STATE_DEAD) {
+				placer.draw(win);
+			}
+
+			if (immobilized) {
+				// TODO Draw some sort of immobilized flag over whatever state the client is in
+
+			}
+
+		} else if (gameState == STATE_WAITING_FOR_RESTART) {
+			win.setColor(new Color(51, 2, 46));
+			win.fillRect(0, 0, 800, 600);
+
+			win.setColor(Color.WHITE);
+			win.setColor(Color.WHITE);
+			win.setFont(new Font("Yu Gothic", Font.BOLD, 100));
+			win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			win.drawString("Game over!", 100, 200);
+
+			win.setFont(new Font("Yu Gothic", Font.BOLD, 50));
+			win.drawString("Press ENTER when you are", 55, 340);
+			win.drawString("ready to restart", 200, 410);
 		}
 	}
 
@@ -211,7 +225,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 	 * @param message
 	 */
 	public synchronized void process(byte message) {
-	
+
 		switch (message) {
 		case OutputMessage.START_GAME:
 			setGameState(Comp.STATE_PLAYING);
@@ -240,43 +254,48 @@ public class Comp extends GameDriverV3 implements KeyListener {
 		case OutputMessage.CAN_SABOTAGE:
 			playingState = Comp.PLAYING_STATE_CAN_SABOTAGE;
 			break;
-		
+
 		case OutputMessage.WARNING_DELAY_JUMP:
 			playingState = Comp.AWAITING_SABOTAGE_DELAY;
 			break;
-		
+
 		case OutputMessage.WARNING_OBSCURE:
 			playingState = Comp.AWAITING_SABOTAGE_OBSCURE;
 			break;
-			
+
 		case OutputMessage.WARNING_REVERSE:
 			playingState = Comp.AWAITING_SABOTAGE_REVERSE;
 			break;
-			
+
 		case OutputMessage.DELAY_JUMP:
 			playingState = Comp.RECEIVED_SABOTAGE_DELAY;
 			break;
-			
+
 		case OutputMessage.OBSCURE:
 			playingState = Comp.RECEIVED_SABOTAGE_OBSCURE;
 			break;
-			
+
 		case OutputMessage.REVERSE:
 			playingState = Comp.RECEIVED_SABOTAGE_REVERSE;
 			break;
-		
+
 		case OutputMessage.RELEASE:
 			playingState = Comp.PLAYING_STATE_NORMAL;
 			break;
-		
+
 		case OutputMessage.DONT_PLACE:
 			transmitMessage(new InputMessage((byte) (ID + 1), InputMessage.CAN_PLACE));
 			break;
+
+		case OutputMessage.RESET:
+			this.gameState = STATE_WAITING_FOR_RESTART;
+			break;
+
 		default:
 			System.out.println("Unknown message: " + message);
 		}
-		
-		//Manually refreshes window as soon as an update comes from the server
+
+		// Manually refreshes window as soon as an update comes from the server
 		repaint();
 	}
 
@@ -305,27 +324,30 @@ public class Comp extends GameDriverV3 implements KeyListener {
 	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (gameState == STATE_PLAYING) {
-			int keyCode = e.getKeyCode();
+		// Stores e.getKeyCode() ahead of time as a micro-optimization
+		int keyCode = e.getKeyCode();
 
-			// When the keys are reversed, the player needs to press down instead of up to jump
-			int jumpCode = (playingState == Comp.RECEIVED_SABOTAGE_REVERSE)? KeyEvent.VK_DOWN : KeyEvent.VK_UP;
-			
+		if (gameState == STATE_PLAYING) {
+
+			// When the keys are reversed, the player needs to press down instead of up to
+			// jump
+			int jumpCode = (playingState == Comp.RECEIVED_SABOTAGE_REVERSE) ? KeyEvent.VK_DOWN : KeyEvent.VK_UP;
+
 			if (keyCode == jumpCode) {
 				// Adds delay to the transmit if the delay is activated
-				if(playingState == Comp.RECEIVED_SABOTAGE_DELAY) {
-					
+				if (playingState == Comp.RECEIVED_SABOTAGE_DELAY) {
+
 					Timer timer = new Timer();
-					
+
 					timer.schedule(new TimerTask() {
 
 						@Override
 						public void run() {
 							cout.transmit(new InputMessage(ID, InputMessage.JUMP));
 						}
-						
+
 					}, 150);
-					
+
 				} else {
 					// Transmits the jump message as normal
 					cout.transmit(new InputMessage(ID, InputMessage.JUMP));
@@ -333,25 +355,33 @@ public class Comp extends GameDriverV3 implements KeyListener {
 			}
 
 			if (playingState == Comp.PLAYING_STATE_CAN_SABOTAGE) {
-				
-				/* If the player presses something other than a number, a NumberFormatException
-				 * will be thrown. When that happens, do nothing. */
-				
+
+				/*
+				 * If the player presses something other than a number, a NumberFormatException
+				 * will be thrown. When that happens, do nothing.
+				 */
+
 				try {
 					byte sabotageID = Byte.parseByte(KeyEvent.getKeyText(keyCode));
-					
-					//Transmit as long as the client does not sabotage itself
-					if(sabotageID != this.ID) {
+
+					// Transmit as long as the client does not sabotage itself
+					if (sabotageID != this.ID) {
 						cout.transmit(new InputMessage(sabotageID, InputMessage.SABOTAGE));
 						playingState = Comp.PLAYING_STATE_NORMAL;
 					}
 				} catch (NumberFormatException e1) {
-					
+
 				}
 
-				
-
 			}
+		} else if (gameState == Comp.STATE_WAITING_FOR_RESTART) {
+			
+			if(keyCode == KeyEvent.VK_ENTER) {
+				cout.transmit(new InputMessage(ID, InputMessage.READY_FOR_RESTART));
+				gameState = Comp.STATE_WAITING_FOR_GAME;
+				repaint();
+			}
+			
 		}
 	}
 
@@ -362,7 +392,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		
+
 	}
 
 	/*
@@ -403,9 +433,10 @@ public class Comp extends GameDriverV3 implements KeyListener {
 
 				placer = new BlockPlacer(this);
 				this.addKeyListener(placer);
+				this.playingState = Comp.PLAYING_STATE_NORMAL;
 			}
-			
-			//Refreshes window to reflect change in state
+
+			// Refreshes window to reflect change in state
 			repaint();
 		}
 		this.gameState = gameState;

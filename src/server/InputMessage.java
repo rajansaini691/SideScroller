@@ -24,5 +24,6 @@ public class InputMessage extends Message{
 	public static final byte DIE = 4;
 	public static final byte ADD_BLOCK = 5;
 	public static final byte CAN_PLACE = 6;
+	public static final byte READY_FOR_RESTART = 7;
 	
 }

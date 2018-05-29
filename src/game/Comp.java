@@ -11,6 +11,7 @@ import java.util.Hashtable;
 import javax.imageio.ImageIO;
 
 import server.GameDriverV3;
+import server.OutputMessage;
 import server.PlayerCollection;
 
 public class Comp extends GameDriverV3 {
@@ -73,10 +74,15 @@ public class Comp extends GameDriverV3 {
 			
 		} else if(gameState == 1) {
 			//Draw players
-			playerCollection.draw(win);
+			try {
+				playerCollection.draw(win);
+			} catch (NullPointerException e){
+				System.exit(0);
+			}
 			
 			//Controls death
 			if(numPlayers < 1) {
+				System.out.println("Restarting game");
 				restartGame();
 				gameState = 2;
 			}
@@ -84,6 +90,15 @@ public class Comp extends GameDriverV3 {
 			//TODO Draw leaderboard
 			win.setColor(new Color(189, 255, 140));
 			win.fillRect(0, 0, 800, 600);
+			
+			
+			playerCollection.getLeaderboard().draw(win);
+			
+			if(playerCollection.getLeaderboard().readyToStart()) {
+				gameState = 0;
+				playerCollection.broadcastMessage(OutputMessage.START_GAME);
+				startGame();
+			}
 		}
 	}
 	
@@ -95,11 +110,13 @@ public class Comp extends GameDriverV3 {
 	}
 	
 	/**
-	 * Reinstantiates all players
+	 * Reinstantiates all players and notifies client
 	 */
-	public void restartGame() {
+	public synchronized void restartGame() {
 		// Reinstantiates all players
 		playerCollection.reset();
+		
+		playerCollection.broadcastMessage(OutputMessage.RESET);
 	}
 	
 	public void startGame() {		
