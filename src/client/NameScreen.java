@@ -31,6 +31,10 @@ public class NameScreen implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+			String name = nameField.getMessage();
+			
+			if(name.length() == 0) name += " ";
+			
 			comp.transmitString(nameField.getMessage());
 			comp.setGameState(2);
 		}
