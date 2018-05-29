@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
 
@@ -45,6 +46,13 @@ public class Server {
 			ss = new ServerSocket(port);
 		} catch (IOException e) {
 			System.exit(0);
+		}
+		
+		// Passes the server IP and port to Comp so that it can be drawn to the screen
+		try {
+			comp.displayHost(ss.getLocalPort(), ss.getInetAddress().getLocalHost().getHostAddress());
+		} catch (UnknownHostException e1) {
+			comp.displayHost(ss.getLocalPort(), "unknown");
 		}
 		
 		//Waits until four clients are connected at once, then breaks out of the loop

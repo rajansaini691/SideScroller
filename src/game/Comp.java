@@ -22,6 +22,12 @@ public class Comp extends GameDriverV3 {
 	private BufferedImage[] images;
 	
 	/**
+	 * Networking variables that get drawn to the screen
+	 */
+	private String IP = " ";
+	private int port = 0;
+	
+	/**
 	 * Stores the number of players so that it can reset the game.
 	 * Defaults to 100 at first so that the game doesn't accidentally reset
 	 */
@@ -71,6 +77,9 @@ public class Comp extends GameDriverV3 {
 				}
 			}
 			
+			// Draws the host and port to be connected to
+			win.setColor(new Color(196, 196, 196));
+			win.drawString("Listening on port " + port + " and address " + IP, 30, 500);
 			
 		} else if(gameState == 1) {
 			//Draw players
@@ -98,6 +107,16 @@ public class Comp extends GameDriverV3 {
 				startGame();
 			}
 		}
+	}
+	
+	/**
+	 * Displays given port and host to the screen
+	 * @param port server's port
+	 * @param host server's IP address or hostname
+	 */
+	public void displayHost(int port, String host) {
+		this.IP = host;
+		this.port = port;
 	}
 	
 	/**
