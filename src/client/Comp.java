@@ -61,6 +61,11 @@ public class Comp extends GameDriverV3 implements KeyListener {
 	private static final int RECEIVED_SABOTAGE_OBSCURE = 7;
 	private static final int AWAITING_SABOTAGE_DELAY = 8;
 	private static final int RECEIVED_SABOTAGE_DELAY = 9;
+	
+	/**
+	 * Holds reference to SoundDriver, which stores and plays sounds
+	 */
+	SoundDriver driver;
 
 	public Comp() {
 		intro = new IntroScreen(this);
@@ -70,6 +75,12 @@ public class Comp extends GameDriverV3 implements KeyListener {
 		this.addKeyListener(intro.getHostField());
 		this.addKeyListener(intro.getPortField());
 
+		String[] soundFiles = {"activate", "can_place", "can_sabotage",
+				"death", "immobile", "jump", "place_block", "sabotaged", 
+				"timer_1", "timer_2", "timer_3", "timer_4", "timer_5"};
+		
+		driver = new SoundDriver(soundFiles);
+		
 	}
 
 	/**
@@ -238,6 +249,8 @@ public class Comp extends GameDriverV3 implements KeyListener {
 		case OutputMessage.IMMOBILIZED:
 			if (playingState != Comp.PLAYING_STATE_DEAD) {
 				immobilized = true;
+				
+				
 			}
 			break;
 
@@ -344,6 +357,11 @@ public class Comp extends GameDriverV3 implements KeyListener {
 						@Override
 						public void run() {
 							cout.transmit(new InputMessage(ID, InputMessage.JUMP));
+							
+							if(!immobilized) {
+								//Plays "jump" sound effect
+								driver.play(5);
+							}
 						}
 
 					}, 150);
@@ -351,6 +369,11 @@ public class Comp extends GameDriverV3 implements KeyListener {
 				} else {
 					// Transmits the jump message as normal
 					cout.transmit(new InputMessage(ID, InputMessage.JUMP));
+					
+					if(!immobilized) {
+						//Plays "jump" sound effect
+						driver.play(5);
+					}
 				}
 			}
 
