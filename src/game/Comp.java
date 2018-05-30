@@ -37,8 +37,8 @@ public class Comp extends GameDriverV3 {
 		this.playerCollection = playerCollection;
 		players = playerCollection.getPlayers();
 		
-		//Initializes resources: 0 - Robot, 1 - Cactus, 2 - flower, 3 - thorn
-		images = new BufferedImage[4];
+		//Initializes resources: 0 - Robot, 1 - Cactus, 2 - flower, 3 - thorn, 4 - grass
+		images = new BufferedImage[5];
 		
 		try {
 			images[0] = ImageIO.read(this.getClass().getResourceAsStream("/Robot.png"));

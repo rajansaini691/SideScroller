@@ -59,7 +59,7 @@ public class BlockManager {
 		Block block;
 		
 		//TODO Delete comment
-		double random = 0.71;//Math.random();
+		double random = 0.9;//Math.random();
 		
 		/*
 		 * The block will have a:
