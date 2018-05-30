@@ -1,5 +1,6 @@
 package client;
 
+import java.io.BufferedInputStream;
 /*
  * To change this template, choose Tools | Templates
 *
@@ -7,6 +8,7 @@ package client;
  * @version 1.32 6/2/2015
  */
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -41,7 +43,10 @@ public class SoundDriver {
                 //File soundFile = new File(aClips[i]);
                 //BufferedInputStream bs = new BufferedInputStream(new FileInputStream(soundFile));
             	//URL inS = ;
-            	AudioInputStream soundIn = AudioSystem.getAudioInputStream(this.getClass().getResourceAsStream(("/" + aClips[i] + ".wav")));
+            	
+            	InputStream bs = this.getClass().getResourceAsStream(("/" + aClips[i] + ".wav"));
+            	BufferedInputStream buffer = new BufferedInputStream(bs);
+            	AudioInputStream soundIn = AudioSystem.getAudioInputStream(buffer);
                 clips[i] = (Clip) AudioSystem.getLine(info);
                 //clips[i] = AudioSystem.
                 clips[i].open(soundIn);
