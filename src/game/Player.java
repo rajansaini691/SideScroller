@@ -388,6 +388,9 @@ public class Player {
 		System.out.println(name + " died");
 		state = STATE_DEAD;
 		sendMessage(new OutputMessage(ID, OutputMessage.DIE));
+		
+		players.broadcastMessage(OutputMessage.LOWER_TIME);
+		
 		Comp.decrementNumPlayers();
 	}
 

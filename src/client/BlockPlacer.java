@@ -103,6 +103,10 @@ public class BlockPlacer implements KeyListener {
 		}, 1000, 1000);
 	}
 	
+	public void decrementTime() {
+		initialCount--;
+	}
+	
 	public void cancelTimer() {
 		timer.cancel();
 	}

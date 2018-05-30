@@ -22,7 +22,6 @@ public class TestBlock extends Block {
 
 	@Override
 	protected BufferedImage getImage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

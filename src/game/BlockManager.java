@@ -58,8 +58,7 @@ public class BlockManager {
 		// Block to be added
 		Block block;
 		
-		//TODO Delete comment
-		double random = 1;//Math.random();
+		double random = Math.random();
 		
 		/*
 		 * The block will have a:

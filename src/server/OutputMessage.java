@@ -22,5 +22,6 @@ public class OutputMessage extends Message {
 	public static final byte RELEASE = 115;
 	public static final byte DONT_PLACE = 114;
 	public static final byte RESET = 113;
+	public static final byte LOWER_TIME = 112;
 	
 }
