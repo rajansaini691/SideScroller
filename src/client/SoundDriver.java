@@ -41,7 +41,7 @@ public class SoundDriver {
                 //File soundFile = new File(aClips[i]);
                 //BufferedInputStream bs = new BufferedInputStream(new FileInputStream(soundFile));
             	//URL inS = ;
-            	AudioInputStream soundIn = AudioSystem.getAudioInputStream(this.getClass().getResource(aClips[i]));
+            	AudioInputStream soundIn = AudioSystem.getAudioInputStream(this.getClass().getResourceAsStream(("/" + aClips[i] + ".wav")));
                 clips[i] = (Clip) AudioSystem.getLine(info);
                 //clips[i] = AudioSystem.
                 clips[i].open(soundIn);
