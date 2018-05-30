@@ -39,6 +39,11 @@ public class BlockPlacer implements KeyListener {
 	private int counter;
 	
 	/**
+	 * The initial time the player has
+	 */
+	private int initialCount = 5;
+	
+	/**
 	 * Instantiates a BlockPlacer object
 	 * @param comp
 	 */
@@ -69,7 +74,8 @@ public class BlockPlacer implements KeyListener {
 	 */
 	public void startTimer() {
 		canPlace = true;
-		counter = 5;
+		
+		counter = initialCount;
 		
 		//Resets timer, since a timer must be reset after cancellation
 		timer.cancel();
@@ -87,6 +93,8 @@ public class BlockPlacer implements KeyListener {
 					comp.transmitMessage(new InputMessage((byte) (comp.getID() + 1), InputMessage.CAN_PLACE));
 					timer.cancel();
 				}
+				
+				comp.playSound(12 - initialCount + counter);
 				
 				//Manually refreshes window since the number is being drawn
 				comp.repaint();
@@ -113,6 +121,9 @@ public class BlockPlacer implements KeyListener {
 			comp.transmitMessage(new InputMessage(InputMessage.PLAYER_ALL, InputMessage.ADD_BLOCK));
 			comp.transmitMessage(new InputMessage((byte) (comp.getID() + 1), InputMessage.CAN_PLACE));
 			timer.cancel();
+			
+			// Plays place_block.wav
+			comp.playSound(6);
 		}
 	}
 

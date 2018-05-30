@@ -244,13 +244,16 @@ public class Comp extends GameDriverV3 implements KeyListener {
 
 		case OutputMessage.CAN_PLACE:
 			placer.startTimer();
+			
+			driver.play(1);
 			break;
 
 		case OutputMessage.IMMOBILIZED:
 			if (playingState != Comp.PLAYING_STATE_DEAD) {
 				immobilized = true;
 				
-				
+				//Plays "immobilized.wav"
+				driver.play(4);
 			}
 			break;
 
@@ -262,34 +265,51 @@ public class Comp extends GameDriverV3 implements KeyListener {
 
 		case OutputMessage.DIE:
 			playingState = Comp.PLAYING_STATE_DEAD;
+			
+			//Playes "die.wav"
+			driver.play(3);
 			break;
 
 		case OutputMessage.CAN_SABOTAGE:
 			playingState = Comp.PLAYING_STATE_CAN_SABOTAGE;
+			
+			driver.play(2);
 			break;
 
 		case OutputMessage.WARNING_DELAY_JUMP:
 			playingState = Comp.AWAITING_SABOTAGE_DELAY;
+			
+			driver.play(7);
 			break;
 
 		case OutputMessage.WARNING_OBSCURE:
 			playingState = Comp.AWAITING_SABOTAGE_OBSCURE;
+			
+			driver.play(7);
 			break;
 
 		case OutputMessage.WARNING_REVERSE:
 			playingState = Comp.AWAITING_SABOTAGE_REVERSE;
+			
+			driver.play(7);
 			break;
 
 		case OutputMessage.DELAY_JUMP:
 			playingState = Comp.RECEIVED_SABOTAGE_DELAY;
+			
+			driver.play(0);
 			break;
 
 		case OutputMessage.OBSCURE:
 			playingState = Comp.RECEIVED_SABOTAGE_OBSCURE;
+			
+			driver.play(0);
 			break;
 
 		case OutputMessage.REVERSE:
 			playingState = Comp.RECEIVED_SABOTAGE_REVERSE;
+			
+			driver.play(0);
 			break;
 
 		case OutputMessage.RELEASE:
@@ -441,6 +461,14 @@ public class Comp extends GameDriverV3 implements KeyListener {
 	public synchronized int getGameState() {
 		return gameState;
 	}
+	
+	/**
+	 * Plays a sound at the given index, specified by the input string at the beginning
+	 * @param index
+	 */
+	public void playSound(int index) {
+		driver.play(index);
+	}
 
 	public void setGameState(int gameState) {
 		if (this.gameState != gameState) { // If gameState is changing out of current state, change keyListeners
@@ -457,6 +485,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 				placer = new BlockPlacer(this);
 				this.addKeyListener(placer);
 				this.playingState = Comp.PLAYING_STATE_NORMAL;
+				this.immobilized = false;
 			}
 
 			// Refreshes window to reflect change in state
