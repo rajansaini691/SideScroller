@@ -133,7 +133,7 @@ public class Player {
 			win.setColor(Color.GRAY);
 			win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			win.setFont(new Font("Century Gothic", Font.PLAIN, 30));
-			win.drawString(name, 30, fieldTop + 30);
+			win.drawString("Client " + ID + ": " + name, 30, fieldTop + 30);
 
 			// Draws player's score
 			win.setColor(Color.BLACK);
