@@ -210,8 +210,11 @@ public class Comp extends GameDriverV3 implements KeyListener {
 			}
 
 			if (immobilized) {
-				// TODO Draw some sort of immobilized flag over whatever state the client is in
-
+				win.setColor(new Color(252, 240, 103));
+				win.fillRect(500, 300, 200, 80);
+				win.setFont(new Font("Yu Gothic", Font.BOLD, 20));
+				win.setColor(Color.BLACK);
+				win.drawString("IMMOBILIZED", 530, 350);
 			}
 
 		} else if (gameState == STATE_WAITING_FOR_RESTART) {
@@ -322,6 +325,10 @@ public class Comp extends GameDriverV3 implements KeyListener {
 
 		case OutputMessage.RESET:
 			this.gameState = STATE_WAITING_FOR_RESTART;
+			break;
+		
+		case OutputMessage.LOWER_TIME:
+			placer.decrementTime();
 			break;
 
 		default:
@@ -486,6 +493,7 @@ public class Comp extends GameDriverV3 implements KeyListener {
 				this.addKeyListener(placer);
 				this.playingState = Comp.PLAYING_STATE_NORMAL;
 				this.immobilized = false;
+				
 			}
 
 			// Refreshes window to reflect change in state

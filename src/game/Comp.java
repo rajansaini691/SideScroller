@@ -10,6 +10,9 @@ import java.util.Hashtable;
 
 import javax.imageio.ImageIO;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import server.GameDriverV3;
 import server.OutputMessage;
 import server.PlayerCollection;
@@ -20,6 +23,13 @@ public class Comp extends GameDriverV3 {
 	private PlayerCollection playerCollection;
 	private Hashtable<Byte, Player> players;
 	private BufferedImage[] images;
+	
+	/**
+	 * Sound-related variables
+	 */
+	private MediaPlayer jazzPlayer;
+	private MediaPlayer syncopatedPlayer;
+	private MediaPlayer fastPlayer;
 	
 	/**
 	 * Networking variables that get drawn to the screen
@@ -51,10 +61,21 @@ public class Comp extends GameDriverV3 {
 			e.printStackTrace();
 			System.exit(0);
 		}
+		
+		new javafx.embed.swing.JFXPanel(); // forces JavaFX init
+		
+		Media jazzFile = new Media(this.getClass().getResource("/jazz.mp3").toString());
+		jazzPlayer = new MediaPlayer(jazzFile);
+		jazzPlayer.play();
+		
+		Media fastFile = new Media(this.getClass().getResource("/fast.mp3").toString());
+		fastPlayer = new MediaPlayer(fastFile);
+		
+		Media syncFile = new Media(this.getClass().getResource("/syncopated.mp3").toString());
+		syncopatedPlayer = new MediaPlayer(syncFile);
+		
 	}
 
-	
-	// TODO Draw IP address to screen OR create a mapping to letters (last priority)
 	@Override
 	public void draw(Graphics2D win) {
 		if(gameState == 0) {				//Draws waiting screen
@@ -99,6 +120,9 @@ public class Comp extends GameDriverV3 {
 				System.out.println("Restarting game");
 				restartGame();
 				gameState = 2;
+				
+				fastPlayer.stop();
+				syncopatedPlayer.play();
 			}
 		} else if (gameState == 2) {
 			win.setColor(new Color(189, 255, 140));
@@ -149,6 +173,12 @@ public class Comp extends GameDriverV3 {
 		numPlayers = players.size();
 		
 		gameState = 1;
+		
+		// Stops the jazz and syncopated players, and starts the fast player on an infinite loop
+		syncopatedPlayer.stop();
+		jazzPlayer.stop();
+		fastPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+		fastPlayer.play();
 	}
 	
 }
