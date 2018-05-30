@@ -84,12 +84,18 @@ public class Comp extends GameDriverV3 {
 			win.fillRect(0, 0, 800, 600);
 			
 			//Draws the title
-			win.setColor(Color.WHITE);
+			win.setColor(new Color(194, 252, 208));
 			win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			win.setFont(new Font("Century Gothic", Font.PLAIN, 65));
-			win.drawString("Enjoy the jazz!", 150, 100);
+			win.setFont(new Font("Century Gothic", Font.BOLD, 100));
+			win.drawString("PLANTS", 220, 100);
+			
+			//Draws the subtitle
+			win.setColor(new Color(114, 181, 101));
+			win.setFont(new Font("Lucida Handwriting", Font.ITALIC, 30));
+			win.drawString("By Rajan Saini", 250, 140);
 			
 			//Draws the players' names
+			win.setColor(Color.WHITE);
 			win.setFont(new Font("Century Gothic", Font.PLAIN, 40));
 			win.drawString("Players: ", 100, 200);
 			
@@ -105,7 +111,12 @@ public class Comp extends GameDriverV3 {
 			
 			// Draws the host and port to be connected to
 			win.setColor(new Color(196, 196, 196));
-			win.drawString("Listening on port " + port + " and address " + IP, 30, 500);
+			win.drawString("Listening on port " + port + " and address " + IP, 30, 470);
+			
+			//Draws "Enjoy the jazz!"
+			win.setColor(new Color(230, 230, 230));
+			win.setFont(new Font("Century Gothic", Font.ITALIC, 30));
+			win.drawString("(Enjoy the jazz!)", 280, 520);
 			
 		} else if(gameState == 1) {
 			//Draw players

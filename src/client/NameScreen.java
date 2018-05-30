@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -22,6 +23,22 @@ public class NameScreen implements KeyListener {
 		win.fillRect(0, 0, 800, 600);
 		
 		nameField.draw(win);
+		
+		win.setColor(Color.WHITE);
+		win.setFont(new Font("Century Gothic", Font.BOLD, 60));
+		win.drawString("How to play: ", 30, 140);
+		
+		win.setFont(new Font("Century Gothic", Font.PLAIN, 30));
+		win.drawString("When your timer starts counting down, press", 30, 200);
+		win.drawString("SPACEBAR. This pushes a plant from every player's", 30, 240);
+		win.drawString("pipe.", 30, 280);
+		win.drawString("Press UP to jump.", 30, 350);
+		win.drawString("Cacti kill, thorns poison, and grasses immobilize.", 30, 410);
+		win.drawString("Flowers let you sabotage a player (by client #).", 30, 470);
+		win.drawString("Getting sabotaged gives you points!", 30, 530);
+		
+		win.drawString("<--- Type name &", 430, 50);
+		win.drawString("press ENTER", 490, 90);
 	}
 	
 	public InputText getNameField() {

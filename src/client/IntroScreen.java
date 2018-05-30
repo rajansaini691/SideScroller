@@ -31,6 +31,18 @@ public class IntroScreen {
 		win.setColor(Color.BLACK);
 		win.fillRect(0, 0, 800, 600);
 		
+		win.setColor(Color.WHITE);
+		win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
+		//Draws Welcome!
+		win.setFont(new Font("Yu Gothic", Font.BOLD, 80));
+		win.drawString("Welcome!", 200, 100);
+		
+		//Draws "Please enter in the port and host. Press enter to move on to the next field"
+		win.setFont(new Font("Century Gothic", Font.PLAIN, 35));
+		win.drawString("Please type in the port and host.", 100, 400);
+		win.drawString("Press ENTER to move on to the next field.", 40, 450);
+		
 		//Initializes drawing text
 		win.setFont(new Font("Yu Gothic", Font.PLAIN, 20));
 		win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
