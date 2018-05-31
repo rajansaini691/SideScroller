@@ -43,6 +43,12 @@ public class IntroScreen {
 		win.drawString("Please type in the port and host.", 100, 400);
 		win.drawString("Press ENTER to move on to the next field.", 40, 450);
 		
+		win.setFont(new Font("Lucida Handwriting", Font.ITALIC, 20));
+		win.setColor(new Color(114, 181, 101));
+		win.drawString("Plants are deceptive. You see them there looking as if", 90, 180);
+		win.drawString("once rooted they know their places; not like animals, like us", 50, 230);
+		win.drawString("always running around, leaving traces.", 150, 280);
+		
 		//Initializes drawing text
 		win.setFont(new Font("Yu Gothic", Font.PLAIN, 20));
 		win.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
