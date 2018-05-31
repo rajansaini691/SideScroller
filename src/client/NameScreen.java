@@ -31,7 +31,7 @@ public class NameScreen implements KeyListener {
 		win.setFont(new Font("Century Gothic", Font.PLAIN, 30));
 		win.drawString("When your timer starts counting down, press", 30, 200);
 		win.drawString("SPACEBAR. This pushes a plant from every player's", 30, 240);
-		win.drawString("pipe.", 30, 280);
+		win.drawString("pipe. If it goes to zero, you die!", 30, 280);
 		win.drawString("Press UP to jump.", 30, 350);
 		win.drawString("Cacti kill, thorns poison, and grasses immobilize.", 30, 410);
 		win.drawString("Flowers let you sabotage a player (by client #).", 30, 470);
