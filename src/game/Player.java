@@ -150,7 +150,9 @@ public class Player {
 
 			// Draws blocks
 			blockManager.draw(win);
-
+			
+			// Draws pipe
+			win.drawImage(images[5], Server.SCREEN_WIDTH - 75, fieldTop, null);
 			// Draws poison overlay
 			poison.draw(win);
 
