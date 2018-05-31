@@ -20,6 +20,17 @@ public class Leaderboard {
 	private ArrayList<LeaderboardPlayer> leaderboard = new ArrayList<LeaderboardPlayer>();
 	
 	/**
+	 * Basically, the players' scores will get drawn one at a time, from last to first. currentScore
+	 * holds the animated score of the player whose score is getting drawn
+	 */
+	private int currentScore = 0;
+	
+	/**
+	 * Index of the player whose score is getting drawn
+	 */
+	private int currentIndex;
+	
+	/**
 	 * Maps between ID and player
 	 */
 	private HashMap<Byte, LeaderboardPlayer> playerMap = new HashMap<Byte, LeaderboardPlayer>();
@@ -35,6 +46,7 @@ public class Leaderboard {
 	 */
 	public Leaderboard(int numPlayers) {
 		this.numPlayers = numPlayers;
+		this.currentIndex = numPlayers - 1;
 	}
 	
 	/**
@@ -62,13 +74,32 @@ public class Leaderboard {
 				win.setColor(Color.BLACK);
 			}
 			
-			try {
-				win.drawString(player.getName(), 100, 80 * i + 200);
-			} catch (Exception e) {
-				System.out.println("Null name: " + player.getName() + " at i = " + i);
-				System.exit(0);
+			win.drawString(player.getName(), 100, 80 * i + 200);
+			//win.drawString("" + player.getScore(), 600, 80 * i + 200);
+		}
+		
+		//If currentIndex = 4, don't draw anything. Draw already animated players
+		for(int i = leaderboard.size() - 1; i > currentIndex; i--) {
+			if(leaderboard.get(i).ready()) {
+				win.setColor(Color.GRAY);
+			} else {
+				win.setColor(Color.BLACK);
 			}
-			win.drawString("" + player.getScore(), 600, 80 * i + 200);
+			win.drawString("" + leaderboard.get(i).getScore(), 600, 80 * i + 200);
+		}
+		
+		// Draw animation
+		if(currentIndex >= 0) {
+			LeaderboardPlayer currentPlayer = leaderboard.get(currentIndex);
+			
+			currentScore += 1;
+			
+			if(currentScore > currentPlayer.getScore()) {
+				currentIndex--;
+				currentScore = 0;
+			}
+			
+			win.drawString("" + currentScore, 600, 80 * currentIndex + 200);
 		}
 		
 	}
@@ -105,10 +136,12 @@ public class Leaderboard {
 	}
 	
 	/**
-	 * Checks if all of the players are ready to start. If so, it returns true
+	 * Checks if all of the players are ready to start, and that the scores are drawn.
+	 *  If so, it returns true
 	 * @return Returns true if all are ready to start, and false otherwise
 	 */
 	public boolean readyToStart() {
+		
 		for(LeaderboardPlayer player : leaderboard) {
 			if(!player.ready()) {
 				return false;

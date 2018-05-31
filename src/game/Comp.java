@@ -168,6 +168,14 @@ public class Comp extends GameDriverV3 {
 	}
 	
 	/**
+	 * Gets the number of alive players
+	 * @return Number of alive players
+	 */
+	public static synchronized int getNumPlayers() {
+		return numPlayers;
+	}
+	
+	/**
 	 * Reinstantiates all players and notifies client
 	 */
 	public synchronized void restartGame() {

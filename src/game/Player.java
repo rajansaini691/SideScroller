@@ -386,7 +386,7 @@ public class Player {
 	/**
 	 * Shuts down all functions and tells client that the player is dead
 	 */
-	public void die() {
+	public synchronized void die() {
 		System.out.println(name + " died");
 		state = STATE_DEAD;
 		sendMessage(new OutputMessage(ID, OutputMessage.DIE));
@@ -394,6 +394,17 @@ public class Player {
 		players.broadcastMessage(OutputMessage.LOWER_TIME);
 		
 		Comp.decrementNumPlayers();
+		
+		raiseScore((numPlayers - Comp.getNumPlayers()) * 200);
+		System.out.println(name + "'s score was raised by " + (numPlayers - Comp.getNumPlayers()) * 200);
+	}
+	
+	/**
+	 * Determines whether the player is dead
+	 * @return Returns true if the player is dead, and false if not
+	 */
+	public boolean isDead() {
+		return state == STATE_DEAD;
 	}
 
 	/**

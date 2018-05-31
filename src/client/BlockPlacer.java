@@ -79,6 +79,9 @@ public class BlockPlacer implements KeyListener {
 		
 		counter = initialCount;
 		
+		// Prevents concurrency conflicts
+		int initCount = initialCount;
+		
 		//Resets timer, since a timer must be reset after cancellation
 		timer.cancel();
 		timer = new Timer();
@@ -96,7 +99,7 @@ public class BlockPlacer implements KeyListener {
 					timer.cancel();
 				}
 				
-				comp.playSound(12 - initialCount + counter);
+				comp.playSound(12 - initCount + counter);
 				
 				//Manually refreshes window since the number is being drawn
 				comp.repaint();
