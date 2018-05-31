@@ -32,7 +32,7 @@ public abstract class Block {
 	/**
 	 * All blocks move to the left at the same rate
 	 */
-	protected int SPEED = 6;
+	protected int SPEED = 8;
 	
 	/**
 	 * Runner whose zone the block is in

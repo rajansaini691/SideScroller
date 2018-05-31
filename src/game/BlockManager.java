@@ -62,16 +62,16 @@ public class BlockManager {
 		
 		/*
 		 * The block will have a:
-		 * 		70% chance of becoming a cactus
-		 * 		12.5% chance of becoming a thorn
-		 * 		12.5% chance of becoming grass
-		 * 		5% chance of becoming a flower
+		 * 		50% chance of becoming a cactus
+		 * 		20% chance of becoming a thorn
+		 * 		20% chance of becoming grass
+		 * 		10% chance of becoming a flower
 		 */
-		if(random < 0.7) {
+		if(random < 0.5) {
 			block = new Cactus(p);
-		} else if(random < 0.825) {
+		} else if(random < 0.7) {
 			block = new Thorn(p);
-		} else if(random < 0.95) {
+		} else if(random < 0.9) {
 			block = new Grass(p);
 		} else {
 			block = new Flower(p);

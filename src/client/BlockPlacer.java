@@ -64,9 +64,11 @@ public class BlockPlacer implements KeyListener {
 	 * @param win
 	 */
 	public void draw(Graphics2D win) {
-		win.setColor(Color.WHITE);
-		win.setFont(new Font("Yu gothic", Font.BOLD, 200));
-		win.drawString("" + counter, 330, 500);
+		if(canPlace) {
+			win.setColor(Color.WHITE);
+			win.setFont(new Font("Yu gothic", Font.BOLD, 200));
+			win.drawString("" + counter, 330, 500);
+		}
 	}
 	
 	/**
@@ -100,7 +102,7 @@ public class BlockPlacer implements KeyListener {
 				comp.repaint();
 			}
 			
-		}, 1000, 1000);
+		}, 700, 700);
 	}
 	
 	public void decrementTime() {

@@ -21,7 +21,7 @@ public class Runner {
 	/**
 	 * The initial jumping speed of the runner (v0)
 	 */
-	private static final int JUMP_SPEED = 10;
+	private static final int JUMP_SPEED = 11;
 
 	/**
 	 * Stores the initial locations of the runner. This way, it always ends up where

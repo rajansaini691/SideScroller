@@ -12,7 +12,7 @@ import game.Comp;
 
 public class Server {
 	
-	private static int[] IDs = new int[4];			
+	private static int[] IDs = new int[1];			
 	private static boolean acceptingNewClients = true;
 	
 	public static int SCREEN_WIDTH;
